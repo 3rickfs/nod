@@ -1,0 +1,4 @@
+#list of packages
+Flask==3.0.0
+flask-mqtt==1.1.1
+

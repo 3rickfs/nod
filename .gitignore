@@ -1,0 +1,9 @@
+*.swp
+*.vim
+*.swn
+*.swn
+*.swm
+./aipu/*.swm
+aipu/.aipu.py.swm/
+*.swo
+*/__pycache__

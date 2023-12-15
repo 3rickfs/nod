@@ -1,7 +1,7 @@
 """
-AIPU (Artificial Intelligence Processing Unit) es el nodo que permitira correr deep tech usando poder descentralizado mediante un conjunto de Aipus para destribuir el procesamiento de los modelos de deep learning. 
+NOD (Neuro Orchestrated device) runs neurons, basic units of Deep Learning models. Neurons are distribuited along the network of NODs, Nodes and Servers in Cloud.
 """
 
-from . import aipu
+from . import nod
 
 __version__ = '1.0.0'

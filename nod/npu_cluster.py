@@ -88,7 +88,7 @@ class create_output_msgs(neuron_ops):
     def run_operation(**kwargs):
         print("Crear mensajes de salida")
         output_msg = {
-            'input_names': [kwargs["output_names"] for i in range(len(kwargs["input_names"]))],
+            'input_names': [kwargs["output_names"] for i in range(len(kwargs["pesos"]))],
             'inputs': {kwargs["output_names"]: kwargs["o"]}
         }
         kwargs["output_msg"] = output_msg

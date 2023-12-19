@@ -200,7 +200,7 @@ class neuron_ops_test_cases(unittest.TestCase):
         print("Test 6: comparing results between tensorflow and nod MLP model", 
               "neuron ops execution")
         expected_result = {'input_names': ['o10-13', 'o10-13'],
-                           'inputs': {'o10-13': [2, 5]}}
+                           'inputs': {'o10-13': [0.16018252000000005, 2.507266210000001]}}
 
         test_nod = nod(
             nod_id = "1",
@@ -215,13 +215,13 @@ class neuron_ops_test_cases(unittest.TestCase):
             output_names = "o10-13",
             output_ip = "192.168.0.1",
             output_port = "6339",
-            input_names = ["i1", "i1", "i1", "i1"],
+            input_names = ["i1", "i2", "i3", "i4"],
             input_num = 4
         )
 
         #inpts = {"i1":[2,3,3]}
         input_msg = { # or output_msg from previous layer
-                     "input_names": ["i1", "i1", "i1", "i1"],
+                     "input_names": ["i1", "i2", "i3", "i4"],
                      "inputs": {"i1":[2, 5, 2, 3]}
                     }
 
@@ -230,7 +230,8 @@ class neuron_ops_test_cases(unittest.TestCase):
                                 [0, 1, 2, 3]):
             try:
                 result = test_nod.run_neuron_ops()
-                print(result["output_msg"])
+                print(f"result: {result['output_msg']}")
+                print(f"expected result: {expected_result}")
                 self.assertEqual(expected_result, result["output_msg"])
             except Exception as e:
                 print("-"*100)

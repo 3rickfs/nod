@@ -78,6 +78,6 @@ class nod():
             return True
         else:
             print("Inputs rejected")
-            return False 
+            return False
 
 

@@ -15,8 +15,7 @@ class nod():
         output_names,
         output_ip,
         output_port,
-        input_names,
-        input_num
+        input_names
     ):
         self.version = "1.0.0"
         self.nod_id = nod_id
@@ -28,9 +27,9 @@ class nod():
         self.output_ip = output_ip
         self.output_port = output_port
         self.input_names = input_names
-        self.neuron_num = len(input_names)
-        self.input_num = input_num
-        self.inputs = {input_names[0]: [0 for i in range(self.input_num)]}
+        self.neuron_num = len(output_names)
+        self.input_num = len(input_names)
+        self.inputs = [0 for i in range(self.input_num)]
         self.input_num_count = 0
         self.status = "waiting"
 
@@ -63,16 +62,16 @@ class nod():
         if self.input_names == entrante_input_names:
             return True
         else:
-            return False
+           return False
 
     def set_inputs(self, inputs, entrante_input_names, input_idx):
         if self.verify_input(entrante_input_names, input_idx):
             print("Inputs accepted")
-            inpts = self.inputs[entrante_input_names[0]]
+            inpts = self.inputs
             for j, idx in enumerate(input_idx):
-                inpts[idx] = inputs[entrante_input_names[0]][j]
+                inpts[idx] = inputs[j]
                 self.input_num_count += 1
-            self.inputs[entrante_input_names[0]] = inpts
+            self.inputs = inpts
             if self.input_num == self.input_num_count:
                 self.status = "ready"
             return True

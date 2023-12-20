@@ -19,9 +19,9 @@ class mul_vectors(neuron_ops):
     def run_operation(**kwargs):
         print("Multiplicar vector x con w")
         m = []
+        inpts = kwargs["inputs"]
         for i in range(len(kwargs["pesos"])):
             #print(kwargs["inputs"]["i1"][i])
-            inpts = list(kwargs["inputs"][kwargs["input_names"][i]])
             print(inpts)
             print(kwargs["pesos"][i])
             mu = [x*w for w, x in zip(kwargs["pesos"][i], inpts)]
@@ -70,7 +70,7 @@ class apply_fa(neuron_ops):
 
         return kwargs
 
- 
+
 class success_msg(neuron_ops):
     """ Generar mensaje de exito
     """
@@ -88,8 +88,8 @@ class create_output_msgs(neuron_ops):
     def run_operation(**kwargs):
         print("Crear mensajes de salida")
         output_msg = {
-            'input_names': [kwargs["output_names"] for i in range(len(kwargs["pesos"]))],
-            'inputs': {kwargs["output_names"]: kwargs["o"]}
+            'input_names': kwargs["output_names"],
+            'inputs': kwargs["o"]
         }
         kwargs["output_msg"] = output_msg
         print(output_msg)

@@ -24,14 +24,14 @@ def model_to_neuron_sets():
 
     info_layer = []
     # get layers info:
-    for l in range(len(json_data["layers"])):
+    for l in range(1, len(json_data["layers"])):
         layer_dict = json_data["layers"]["layer_" + str(l)]
-        ws, bs, fas, ins, ons = [], [], [], []
-        for n in range(len(layer_dict)):
+        ws, bs, fas, ins, ons = [], [], [], [], []
+        for n in range(1, len(layer_dict)):
             neuron_dict = layer_dict["neuron_" + str(n)]
             ws.append(neuron_dict["weights"]["w"])
             bs.append(neuron_dict["bias"])
-            fas.append(neuron_dict["fs"])
+            fas.append(neuron_dict["fa"])
             ins.append(neuron_dict["input_names"])
             ons.append(neuron_dict["output_names"])
 
@@ -62,19 +62,23 @@ def model_to_neuron_sets():
                 info_layer[layer][2],
                 info_layer[layer][3],
                 info_layer[layer][4],
-                nod_ep[0]
+                nod_ep[0] #to the pynister
             )
-
-
+            nc = 1
         else:
-            for nod in nods_num:
-                for 
+            for j in range(0, len(info_layer["layers"][2]), nods_num):
+                nod_dict["nod_" + nc] = save_nod_info_in_dict(
+                    nc,
+                    layer + 1,
+                    info_layer[layer][0],
+                    info_layer[layer][1][j:j+nods_num],
+                    info_layer[layer][2][j:j+nods_num],
+                    info_layer[layer][3][j:j+nods_num],
+                    info_layer[layer][4],
+                    nod_ep[layer + 1]
+                )
 
-        nod_dict[
-
-
-
-    return json_data['model_info']
+    return nod_dict #json_data['model_info']
 
 if __name__ == '__main__':
     host = os.getenv('FLASK_HOST', '0.0.0.0')

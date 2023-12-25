@@ -87,7 +87,9 @@ class neuron_ops_test_cases(unittest.TestCase):
                                    data=json_data, headers=headers
                                   )
 
-            print(f"result: {result.text}")
+            print("__________________________________")
+            print(f"result: {json.loads(result.text)}")
+            print("__________________________________")
             print(f"expected_result: {expected_result}")
             self.assertEqual(expected_result, result.text)
         except Exception as e:

@@ -1,4 +1,6 @@
 *.swp
+*.pyc
+nod/test/__pycache__/
 *.vim
 *.swn
 *.swn

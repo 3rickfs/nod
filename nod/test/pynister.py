@@ -3,18 +3,26 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
+def not_repeat(input_names):
+    #neurons mostly have same input names, removing repeatitions  
+    #not sure is there is any reason to have different input names.
+    #For now just considering one single array for same inputs
+    return input_names[0]
+
 def save_nod_info_in_dict(nod_id, capa_id, input_names, pesos, biases, fas,
                           output_names, output_ep
                          ):
     jsn = {}
-    jsn["nod_id"] = nod_id
-    jsn["capa_id"] = capa_id
-    jsn["input_names"] = input_names
+    jsn["nod_id"] = str(nod_id)
+    jsn["capa_id"] = str(capa_id)
+    jsn["input_names"] = not_repeat(input_names)
     jsn["pesos"] = pesos
     jsn["biases"] = biases
     jsn["fas"] = fas
-    jsn["output_names"] = output_names
-    jsn["output_ep"] = output_ep
+    jsn["output_names"] = [
+        [i,j] for i, j in zip(output_names[0][:], output_names[1][:])
+    ][0] # making it just one array.
+    jsn["output_ep"] = [output_ep for i in range(len(output_names))]
 
     return jsn
 
@@ -42,11 +50,11 @@ def model_to_neuron_sets():
     #split model:
     neurons_per_nod = json_data["CoN_parameters"]["neurons_per_nod"]
     nod_num = json_data["CoN_parameters"]["nod_num"]
-    nod_ep = ["http://localhost:5000/final_prediction", #TODO: add this to list of endpoints
-              ("a545ed66e46bc4ea788f4aada7bcea72-1944961211.",
-              "us-west-1.elb.amazonaws.com:5000/exec_neurons"),
-              ("a6823b10e5c7a4dd5a038a6f813091b4-242539242.",
-              "us-west-1.elb.amazonaws.com:5000/exec_neurons")]
+    nod_ep = ["http://localhost:5000/final_prediction",
+              "http://a545ed66e46bc4ea788f4aada7bcea72-1944961211."+\
+              "us-west-1.elb.amazonaws.com:5000/exec_neurons",
+              "http://a6823b10e5c7a4dd5a038a6f813091b4-242539242."+\
+              "us-west-1.elb.amazonaws.com:5000/exec_neurons"]
 
     nod_dict = {}
     #last layer just one neuron
@@ -77,7 +85,7 @@ def model_to_neuron_sets():
                     info_layer[layer][2][j:j+neuron_num],
                     info_layer[layer][3][j:j+neuron_num],
                     info_layer[layer][4],
-                    nod_ep[layer + 1]
+                    nod_ep[nc + 1] #to the next neuron
                 )
             nc += 1
 

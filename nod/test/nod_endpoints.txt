@@ -1,0 +1,5 @@
+http://a545ed66e46bc4ea788f4aada7bcea72-1944961211.us-west-1.elb.amazonaws.com:5000/exec_neurons
+http://a6823b10e5c7a4dd5a038a6f813091b4-242539242.us-west-1.elb.amazonaws.com:5000/exec_neurons
+http://nod3:5000/exec_neurons
+http://nod4:5000/exec_neurons
+http://nod5:5000/exec_neurons

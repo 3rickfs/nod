@@ -113,11 +113,11 @@ def model_to_neuron_sets():
                     info_layer[layer][1][j:j+neurons_per_nod], #neuron_num],
                     info_layer[layer][2][j:j+neurons_per_nod],  #neuron_num],
                     info_layer[layer][3][j:j+neurons_per_nod], #neuron_num],
-                    info_layer[layer][4],
+                    info_layer[layer][4][j:j+neurons_per_nod],
                     info_layer[layer+1][5] #ep to the next neuron in next layer
                 )
                 nods_num -= 1 #every time it's added a new nod
-            noc += 1
+                noc += 1
             if nods_num > 0:
                 #it left one nod to be added, there're more neurons yet
                 nod_dict["nod" + str(noc)] = save_nod_info_in_dict(
@@ -127,7 +127,7 @@ def model_to_neuron_sets():
                     info_layer[layer][1][j:],
                     info_layer[layer][2][j:],
                     info_layer[layer][3][j:],
-                    info_layer[layer][4],
+                    info_layer[layer][4][j:],
                     info_layer[layer+1][5] #ep to the next neuron in next layer
                 )
 

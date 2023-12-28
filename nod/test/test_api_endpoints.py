@@ -123,10 +123,8 @@ class neuron_ops_test_cases(unittest.TestCase):
                 "biases": [0.0, 0.0],
                 "fas": ['relu', 'relu'],
                 "output_names": ['o1', 'o2'],
-                "output_ep":[("http://a6823b10e5c7a4dd5a038a6f813091b4-"
-                              "242539242.us-west-1.elb.amazonaws.com:5000/"
-                              "exec_neurons")
-                            ]
+                "output_ep":["http://nod3:5000/exec_neurons",
+                             "http://nod3:5000/exec_neurons"]
             },
             "nod_2": {
                 "nod_id": "2",
@@ -138,10 +136,7 @@ class neuron_ops_test_cases(unittest.TestCase):
                 "biases": [0.0],
                 "fas": ['relu'],
                 "output_names": ['o3'],
-                "output_ep":[("http://a6823b10e5c7a4dd5a038a6f813091b4-"
-                              "242539242.us-west-1.elb.amazonaws.com:5000/"
-                              "exec_neurons")
-                            ]
+                "output_ep":["http://nod3:5000/exec_neurons"]
             },
             "nod_3": {
                 "nod_id": "3",

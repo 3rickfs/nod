@@ -23,6 +23,32 @@ def model_to_neuron_sets():
 
     return json.dumps(nod_dict) #json_data['model_info']
 
+@app.route("/distribute_neurons", methods = ['POST'])
+def distribute_neurons():
+    nod_dict = {}
+    #this will be used for the neuro orchestrator to send json to nods too
+    nod_ep = read_endpoints("./nod_endpoints.txt")
+    neuro_orchestrator_ep = ["http://localhost:5000/final_prediction"]
+    json_data = request.get_json()
+    #Orchestration planning
+    try:
+        nod_dict = OrchPlannerOps.run(
+            nod_ep = nod_ep,
+            neuro_orchestrator_ep = neuro_orchestrator_ep,
+            json_data = json_data
+        )["nod_dict"]
+    except Exception as e:
+        print(f"error during orchestration planning: {e}")
+    #Distribution of neurons
+    try:
+        nod_res = neuron_distributor.start_distributon(nod_dict,
+                                                       nod_ep
+                                                      )
+    except Exception as e:
+        print(f"error during orchestration planning: {e}")
+
+    return json.dumps(nod_res)
+
 if __name__ == '__main__':
     host = os.getenv('FLASK_HOST', '0.0.0.0')
     port = os.getenv('FLASK_PORT', '5000')

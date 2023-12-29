@@ -64,10 +64,8 @@ class get_model_components(orc_pla_ops):
         noc = 0 #nod counter
         for l in range(1, len(json_data["layers"])+1):
             layer_dict = json_data["layers"]["layer_" + str(l)]
-
             neuron_num = len(layer_dict)
             nods_num = get_nods_number(neuron_num, neurons_per_nod) 
-
             ws, bs, fas, ins, ons, eps = [], [], [], [], [], []
             for n in range(1, neuron_num+1):
                 neuron_dict = layer_dict["neuron_" + str(nc)]
@@ -117,7 +115,6 @@ class create_nod_dictionary(orc_pla_ops):
                 noc = 1
             else:
                 neuron_num = len(info_layer[layer][2])
-                nods_num = len(info_layer[layer][5])
                 for j in range(0, neuron_num, neurons_per_nod):
                     nod_dict["nod_" + str(noc)] = save_nod_info_in_dict(
                         noc,
@@ -127,22 +124,11 @@ class create_nod_dictionary(orc_pla_ops):
                         info_layer[layer][2][j:j+neurons_per_nod],
                         info_layer[layer][3][j:j+neurons_per_nod],
                         info_layer[layer][4][j:j+neurons_per_nod],
-                        info_layer[layer+1][5] #ep to the next neuron in next layer
+                        #ep to the next neuron in next layer
+                        info_layer[layer+1][5]
                     )
-                    nods_num -= 1 #every time it's added a new nod
                     noc += 1
-                if nods_num > 0:
-                    #it left one nod to be added, there're more neurons yet
-                    nod_dict["nod" + str(noc)] = save_nod_info_in_dict(
-                        noc,
-                        layer + 1,
-                        info_layer[layer][0],
-                        info_layer[layer][1][j:],
-                        info_layer[layer][2][j:],
-                        info_layer[layer][3][j:],
-                        info_layer[layer][4][j:],
-                        info_layer[layer+1][5] #ep to the next neuron in next layer
-                    )
+
         kwargs["nod_dict"] = nod_dict
 
         return kwargs
@@ -155,8 +141,4 @@ class OrchPlannerOps:
             kwargs = operation.run_operation(**kwargs)
 
         return kwargs
-
-
-
-
 

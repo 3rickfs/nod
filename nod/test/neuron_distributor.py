@@ -1,6 +1,6 @@
 import requests
 
-def start_distributon(nod_dict, nod_ep):
+def start_distribution(nod_dict, nod_ep):
     """ Start distributing neurons to every NOD according
         to the previuosly stablished plan.
     """

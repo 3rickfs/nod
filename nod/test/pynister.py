@@ -41,12 +41,6 @@ def read_endpoints(fpath):
     eps = []
     with open("./nod_endpoints.txt", "r") as ep_file:
         eps = [line.rstrip() for line in ep_file]
-        #while True:
-        #    ep = ep_file.readline()
-        #    if not ep:
-        #        break
-        #    else:
-        #        eps.append(ep)
         ep_file.close()
     return eps
 

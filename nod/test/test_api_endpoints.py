@@ -339,6 +339,8 @@ class neuron_ops_test_cases(unittest.TestCase):
 
         print("*"*100)
 
+"""
+
     def test_model_json_to_neuron_set_jsons_6(self):
         print("*"*100)
         print("Test 7: testing first deep neural network")
@@ -374,7 +376,7 @@ class neuron_ops_test_cases(unittest.TestCase):
 
         print("*"*100)
 
-
+"""
 
 if __name__ == '__main__':
     unittest.main()

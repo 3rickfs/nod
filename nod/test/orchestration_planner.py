@@ -54,6 +54,10 @@ class get_model_components(orc_pla_ops):
     """
     def run_operation(**kwargs):
         json_data = kwargs["json_data"]
+        nod_ep = kwargs["nod_ep"]
+        #split parameters model:
+        neurons_per_nod = json_data["CoN_parameters"]["neurons_per_nod"]
+        nod_num = json_data["CoN_parameters"]["nod_num"]
         info_layer = []
         # get layers info:
         nc = 1 #neurons counter
@@ -91,6 +95,10 @@ class create_nod_dictionary(orc_pla_ops):
     def run_operation(**kwargs):
         info_layer = kwargs["info_layer"]
         nod_dict = {}
+        neuro_orchestrator_ep = kwargs["neuro_orchestrator_ep"]
+        neurons_per_nod = kwargs["json_data"]\
+                                ["CoN_parameters"]\
+                                ["neurons_per_nod"]
         #last layer just one neuron
         layers_num = len(info_layer)
         noc = 1

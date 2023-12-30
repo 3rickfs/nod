@@ -8,9 +8,9 @@ nod = None
 
 @app.route("/")
 def hello_world():
-    return "<p>Hello, World! I'm a virtual NOD (Neuro Orchestrated Device)" \
-           "running in EKS cluster in AWS as a pod. So I'm ready for running" \
-           "multiple neurons. Nice to meet you.</p>"
+    return "<p>Hello, World! I'm a virtual NOD (Neuro Orchestrated Device)"+ \
+           " running in EKS cluster in AWS as a pod. So I'm ready for running"+ \
+           " multiple neurons. Nice to meet you.</p>"
 
 @app.route("/save_neurons", methods=['POST'])
 def save_neurons():
@@ -18,11 +18,13 @@ def save_neurons():
     nod_data = request.get_json()
 
     try:
-        if nod == None:
-            #create nod object
-        new_nod 
-        nod_model = get_parameters(nod_data)
-        result = {"result": "neuron saved"}
+        nod = nod()
+        if nod.read_parameters(nod_data):
+            if not nod.save_parameteres(nod_data):
+                raise Exception("Error saving parameters")
+        else:
+            raise Exception("Error reading parameters")
+        result = {"result": "neurons installed"}
     except Exception as e:
         print(f"Error during getting nod parameters: {e}")
         result = {"result": "error during getting nod params: " + e}

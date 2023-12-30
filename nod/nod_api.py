@@ -1,10 +1,10 @@
 import json
 
-from flask import Flask
-from nod.nod import nod  
+from flask import Flask, request
+from nod.nod import nod
 
 app = Flask(__name__)
-nod = None
+nodo = None
 
 @app.route("/")
 def hello_world():
@@ -14,20 +14,21 @@ def hello_world():
 
 @app.route("/save_neurons", methods=['POST'])
 def save_neurons():
-    global nod
+    global nodo
     nod_data = request.get_json()
 
     try:
-        nod = nod()
-        if nod.read_parameters(nod_data):
-            if not nod.save_parameteres(nod_data):
+        #print(nod_data)
+        nodo = nod()
+        if nodo.read_parameters(nod_data):
+            if not nodo.save_parameteres(nod_data):
                 raise Exception("Error saving parameters")
         else:
             raise Exception("Error reading parameters")
         result = {"result": "neurons installed"}
     except Exception as e:
         print(f"Error during getting nod parameters: {e}")
-        result = {"result": "error during getting nod params: " + e}
+        result = {"result": f"error during getting nod params: {e}"}
 
     return json.dumps(result)
 

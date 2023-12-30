@@ -1,4 +1,6 @@
 # Create the nod classes
+import json
+
 from . npu_cluster import NPUClusterOps
 
 class nod():
@@ -6,31 +8,31 @@ class nod():
     """
 
     def __init__(
-        self,
-        nod_id="",
-        pesos=[],
-        biases=[],
-        fas=[],
-        capa_id="",
-        output_names=[],
+        self
+        #nod_id="",
+        #pesos=[],
+        #biases=[],
+        #fas=[],
+        #capa_id="",
+        #output_names=[],
         #output_ip=[],
         #output_port=[],
-        output_eps=[]
-        input_names=[]
+        #output_eps=[],
+        #input_names=[]
     ):
         self.version = "1.0.0"
-        self.nod_id = nod_id
-        self.pesos = pesos
-        self.biases = biases
-        self.fas = fas
-        self.capa_id = capa_id
-        self.output_names = output_names
+        self.nod_id = ""
+        self.pesos = []
+        self.biases = [] 
+        self.fas = []
+        self.capa_id = ""
+        self.output_names = []
         #self.output_ip = output_ip
         #self.output_port = output_port
-        self.output_eps = output_eps
-        self.input_names = input_names
-        self.neuron_num = len(output_names)
-        self.input_num = len(input_names)
+        self.output_eps = []
+        self.input_names = []
+        self.neuron_num = len(self.output_names)
+        self.input_num = len(self.input_names)
         self.inputs = [0 for i in range(self.input_num)]
         self.input_num_count = 0
         self.status = "waiting"
@@ -63,6 +65,7 @@ class nod():
                 json.dump(nod_data, jsonfile)
             jsonfile.close()
         except Exception as e:
+            print(e)
             return False
 
         return True

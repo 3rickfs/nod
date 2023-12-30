@@ -34,11 +34,17 @@ class nod():
         self.neuron_num = len(self.output_names)
         self.input_num = len(self.input_names)
         self.inputs = [0 for i in range(self.input_num)]
+        self.neuron_outputs = [0 for i in range(len(self.pesos))]
         self.input_num_count = 0
         self.status = "waiting"
+        self.nod_memory_address = ""
 
         #self.instrucciones = self.get_format_instr(instrucciones) 
         #self.procesadores = self.get_format_proc(procesadores)
+
+    def get_neuron_outputs(self):
+        print("Getting neuron outputs")
+        return self.neuron_outputs
 
     def read_parameters(self, nod_data):
         print("Reading nod parameters")
@@ -51,6 +57,11 @@ class nod():
             self.fas = nod_data["fas"]
             self.output_names = nod_data["output_names"]
             self.output_eps = nod_data["output_ep"]
+            self.neuron_num = len(self.output_names)
+            self.input_num = len(self.input_names)
+            self.inputs = [0 for i in range(self.input_num)]
+            self.neuron_outputs = [0 for i in range(len(self.pesos))]
+            self.nod_memory_address = nod_data["nod_memory_address"]
 
             #TODO: validate most critic parameters
         except Exception as e:
@@ -61,6 +72,7 @@ class nod():
     def save_parameteres(self, nod_data):
         print("Saving parameters as json format")
         try:
+            #TODO: update following file path according to real nods
             with open("./nod_ai_model.json","w") as jsonfile:
                 json.dump(nod_data, jsonfile)
             jsonfile.close()
@@ -84,6 +96,7 @@ class nod():
                 #output_port = self.output_port
                 output_eps = self.output_eps
             )
+            self.neuron_outputs = result["o"]
             self.status = "waiting" #for next job
             self.input_num_count = 0
         except Exception as e:
@@ -109,6 +122,8 @@ class nod():
             self.inputs = inpts
             if self.input_num == self.input_num_count:
                 self.status = "ready"
+                #Running neurons inmediately after setting inputs
+                r = self.run_neuron_ops()
             return True
         else:
             print("Inputs rejected")

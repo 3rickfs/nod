@@ -65,8 +65,9 @@ class apply_fa(neuron_ops):
         print("Aplicar la funcion de activacion")
         kwargs["o"] = []
         for i in range(len(kwargs["sb"])):
-            if kwargs["fas"][i] == "ReLu":
+            if kwargs["fas"][i] == "relu":
                 kwargs["o"].append(max(0, kwargs["sb"][i]))
+                #TODO: code softmax function
 
         return kwargs
 

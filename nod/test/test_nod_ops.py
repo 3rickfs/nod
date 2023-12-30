@@ -148,7 +148,7 @@ class neuron_ops_test_cases(unittest.TestCase):
             nod_id = "1",
             pesos = [[1,2,3], [1,2,3], [1,2,3], [1,2,3]],
             biases = [3, 4, 5, 6],
-            fas = ["ReLu", "ReLu", "ReLu", "ReLu"],
+            fas = ["relu", "relu", "relu", "relu"],
             capa_id = "1",
             output_names = ["o0", "o1", "o2", "o3"],
             output_ip = ["192.168.0.1", "192.168.0.2"],
@@ -204,7 +204,7 @@ class neuron_ops_test_cases(unittest.TestCase):
                 [-0.5579376 ,  0.9647362 ,  0.79972816, -0.93333197]
             ],
             biases = [0, 0],
-            fas = ["ReLu", "ReLu"],
+            fas = ["relu", "relu"],
             capa_id = "1",
             output_names = ["o0", "o1"],
             output_ip = ["192.168.0.1", "192.168.0.1"],

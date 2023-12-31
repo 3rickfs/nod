@@ -23,7 +23,7 @@ class nod():
         self.version = "1.0.0"
         self.nod_id = ""
         self.pesos = []
-        self.biases = [] 
+        self.biases = []
         self.fas = []
         self.capa_id = ""
         self.output_names = []

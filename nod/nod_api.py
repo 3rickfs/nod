@@ -3,6 +3,7 @@ import ctypes
 
 from flask import Flask, request
 from nod.nod import nod
+from synapses import synapses_process
 
 app = Flask(__name__)
 nodo = None
@@ -72,8 +73,29 @@ def get_neuron_outputs():
 
     return str(neuron_outputs)
 
+@app.route("/send_nod_inputs", methods=['POST'])
+def send_nod_inputs():
+    input_data = request.get_json()
+
+    try:
+        nodo = ctypes.cast(int(input_data["nodo_mem_adr"]), ctypes.py_object).value
+        if nodo.set_inputs(input_data["inputs"],
+                           input_data["input_names"],
+                           input_data["input_idx"]
+                          ):
+            result = {"result": "nod inputs transferred"}
+            outputs = 123
+        else:
+            raise Exception("Error reading nod inputs")
+    except Exception as e:
+        print(f"Error reading nod inputs: {e}")
+        result = {"result": f"error reading nod inputs: {e}"}
+
+    return json.dumps(result)
+
 
 if __name__ == '__main__':
     host = os.getenv('FLASK_HOST', '0.0.0.0')
     port = os.getenv('FLASK_PORT', '5000')
     app.run(host=host, port=int(port))
+

@@ -1,0 +1,2 @@
+http://nod1:5000/save_neurons
+http://nod2:6000/save_neurons

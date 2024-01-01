@@ -37,10 +37,24 @@ class nod():
         self.neuron_outputs = [0 for i in range(len(self.pesos))]
         self.input_num_count = 0
         self.status = "waiting"
-        self.nod_memory_address = ""
+        #self.nod_memory_address = ""
+        self.nodo_mem_adr_dstn = ""
+        self.synapses_process_id = 0
 
         #self.instrucciones = self.get_format_instr(instrucciones) 
         #self.procesadores = self.get_format_proc(procesadores)
+
+    def set_nodo_mem_adr(self, nodo_ma, synapses_process_id):
+        print("Saving object memory address into a dictionary")
+        synapses_processes[str(synapses_process_id)] = nodo_ma
+        self.synapses_process_id = synapses_process_id
+        with open("synapses_processes.json", "w") as jsonfile:
+            json.dump(json.dumps(str(synapses_processes)), jsonfile)
+        jsonfile.close()
+
+    def set_synapses_process_id(self, synapses_process_id):
+        print("Setting the synapses process id")
+        self.synapses_process_id = synapses_process_id
 
     def get_neuron_outputs(self):
         print("Getting neuron outputs")
@@ -61,7 +75,8 @@ class nod():
             self.input_num = len(self.input_names)
             self.inputs = [0 for i in range(self.input_num)]
             self.neuron_outputs = [0 for i in range(len(self.pesos))]
-            self.nod_memory_address = nod_data["nod_memory_address"]
+            #self.nod_memory_address = nod_data["nod_memory_address"]
+            self.synapses_process_id = nod_data["synapses_process_id"]
 
             #TODO: validate most critic parameters
         except Exception as e:
@@ -76,6 +91,7 @@ class nod():
             with open("./nod_ai_model.json","w") as jsonfile:
                 json.dump(nod_data, jsonfile)
             jsonfile.close()
+
         except Exception as e:
             print(e)
             return False
@@ -94,7 +110,8 @@ class nod():
                 output_names = self.output_names,
                 #output_ip = self.output_ip,
                 #output_port = self.output_port
-                output_eps = self.output_eps
+                output_eps = self.output_eps,
+                synapses_process_id = self.synapses_process_id
             )
             self.neuron_outputs = result["o"]
             self.status = "waiting" #for next job

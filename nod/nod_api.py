@@ -9,6 +9,13 @@ app = Flask(__name__)
 nodo = None
 outputs = []
 
+def get_nodo_mem_adr(synapses_process_id):
+    with open("synapses_processes.json", "r") as jsonfile:
+        sp = json.loads(jsonfile)
+    jsonfile.close()
+
+    return sp[str(synapses_process_id)]
+
 @app.route("/")
 def hello_world():
     return "<p>Hello, World! I'm a virtual NOD (Neuro Orchestrated Device)"+ \
@@ -22,8 +29,9 @@ def save_neurons():
 
     try:
         nodo = nod()
-        nodo_mem_adr = id(nodo)
-        nod_data["nod_memory_address"] = nodo_mem_adr
+        #nodo_mem_adr = nodo.set_synapses_process_id(id(nodo))
+        nodo_mem_adr = nodo.set_nodo_mem_adr(id(nodo), nod_data["synapses_process_id"])
+        #nod_data["nod_memory_address"] = nodo_mem_adr
         if nodo.read_parameters(nod_data):
             if not nodo.save_parameteres(nod_data):
                 raise Exception("Error saving parameters")
@@ -78,7 +86,10 @@ def send_nod_inputs():
     input_data = request.get_json()
 
     try:
-        nodo = ctypes.cast(int(input_data["nodo_mem_adr"]), ctypes.py_object).value
+        nodo_mem_adr = get_nodo_mem_adr(input_data["synapses_process_id"])
+        nodo = ctypes.cast(int(nodo_mem_adr), ctypes.py_object).value
+        nodo.set_synapses_process_id(input_data["synapses_process_id"])
+        #nodo.set_nod_destinations(input_data["nodo_mem_adr_dstn"])
         if nodo.set_inputs(input_data["inputs"],
                            input_data["input_names"],
                            input_data["input_idx"]

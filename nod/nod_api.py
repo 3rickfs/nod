@@ -3,7 +3,7 @@ import ctypes
 
 from flask import Flask, request
 from nod.nod import nod
-from synapses import synapses_process
+#from synapses import synapses_process
 
 app = Flask(__name__)
 nodo = None
@@ -26,14 +26,18 @@ def hello_world():
 def save_neurons():
     global nodo
     nod_data = request.get_json()
+    nod_data = nod_data.replace("\'", "\"")
+    nod_data = json.loads(nod_data)
 
     try:
         nodo = nod()
+        print(f"nod_data: {nod_data}")
         #nodo_mem_adr = nodo.set_synapses_process_id(id(nodo))
         nodo_mem_adr = nodo.set_nodo_mem_adr(id(nodo), nod_data["synapses_process_id"])
+        print("lalalal 1")
         #nod_data["nod_memory_address"] = nodo_mem_adr
         if nodo.read_parameters(nod_data):
-            if not nodo.save_parameteres(nod_data):
+            if not nodo.save_parameters(nod_data):
                 raise Exception("Error saving parameters")
         else:
             raise Exception("Error reading parameters")

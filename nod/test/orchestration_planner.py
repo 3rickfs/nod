@@ -35,7 +35,8 @@ def get_nods_number(neuron_num, neurons_per_nod):
 def read_endpoints(fpath):
     #reading endpoints
     eps = []
-    with open("./nod_endpoints.txt", "r") as ep_file:
+    #with open("./nod_endpoints.txt", "r") as ep_file:
+    with open(fpath, "r") as ep_file:
         eps = [line.rstrip() for line in ep_file]
         ep_file.close()
     return eps

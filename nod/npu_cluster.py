@@ -115,6 +115,7 @@ class execute_synapse(neuron_ops):
         #TODO: consider more than one output endpoint
         #for n in range(len(kwargs["output_ep"])):
         json_data = json.dumps(nod_input)
+        headers = {'Content-type': 'application/json'}
         result = requests.post(kwargs["output_ep"][0],
                                data=json_data, headers=headers
                               )

@@ -1,3 +1,4 @@
+import json
 
 class synapses_process():
     def __init__(self, ai_model_path, distributed_model):
@@ -8,7 +9,7 @@ class synapses_process():
         self.synapses_processes = {}
         self.synapses_process_id = 0
 
-    def read_synapsys_output(self):
+    def read_synapses_output(self):
         print("Reading synpases output")
         return self.synapses_output
 

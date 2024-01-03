@@ -1,2 +1,0 @@
-http://nod1:5000/send_nod_inputs
-http://nod2:6000/send_nod_inputs

@@ -40,17 +40,22 @@ class nod():
         #self.nod_memory_address = ""
         self.nodo_mem_adr_dstn = ""
         self.synapses_process_id = 0
+        self.synapses_processes = dict()
 
         #self.instrucciones = self.get_format_instr(instrucciones) 
         #self.procesadores = self.get_format_proc(procesadores)
 
     def set_nodo_mem_adr(self, nodo_ma, synapses_process_id):
         print("Saving object memory address into a dictionary")
-        synapses_processes[str(synapses_process_id)] = nodo_ma
+        print(f"synpasys process id: {str(synpases_process_id)}")
+        self.synapses_processes[str(synapses_process_id)] = nodo_ma
+        print(f"nodo ma: {nodo_ma}")
         self.synapses_process_id = synapses_process_id
         with open("synapses_processes.json", "w") as jsonfile:
-            json.dump(json.dumps(str(synapses_processes)), jsonfile)
+            json.dump(json.dumps(str(self.synapses_processes)), jsonfile)
         jsonfile.close()
+
+        return nodo_ma
 
     def set_synapses_process_id(self, synapses_process_id):
         print("Setting the synapses process id")
@@ -141,6 +146,7 @@ class nod():
                 self.status = "ready"
                 #Running neurons inmediately after setting inputs
                 r = self.run_neuron_ops()
+                self.input_num_count = 0
             return True
         else:
             print("Inputs rejected")

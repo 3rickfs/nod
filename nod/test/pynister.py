@@ -1,7 +1,11 @@
 import json
+import requests
+import ctypes
 from flask import Flask, request
 
 from orchestration_planner import read_endpoints, OrchPlannerOps
+from synapses import synapses_process
+from neuron_distributor import start_distribution
 
 app = Flask(__name__)
 syn_proc = None
@@ -53,13 +57,13 @@ def distribute_neurons():
         print(f"error during orchestration planning: {e}")
     #Distribution of neurons
     try:
-        nod_res = neuron_distributor.start_distributon(nod_dict,
-                                                       nod_dis_ep
-                                                      )
+        nod_res = start_distribution(nod_dict,
+                                    nod_dis_ep
+                                   )
     except Exception as e:
         print(f"error during orchestration planning: {e}")
 
-    return json.dumps(nod_res)
+    return json.dumps(str(nod_res))
 
 @app.route("/start_synapses_process", methods=['POST'])
 def start_synapses_process():
@@ -69,10 +73,10 @@ def start_synapses_process():
     syn_proc = synapses_process(**input_data)
 
     synapses_process_id = id(syn_proc)
-    syn_proc.set_synapses_process_id(synapses_process_id)
+    syn_proc.set_object_memory_address(synapses_process_id)
     output = {"synapses_process_id": synapses_process_id}
 
-    return json.dumps(syn_proc_id)
+    return json.dumps(output)
 
 @app.route("/send_inputs_to_1layer_nods", methods=['POST'])
 def send_inputs_to_1layer_nods():
@@ -81,6 +85,7 @@ def send_inputs_to_1layer_nods():
 
     json_data = json.dumps(input_data)
     #TODO: Change the following endpoint properly
+    headers = {'Content-type': 'application/json'}
     result = requests.post("http://localhost:5000/send_nod_inputs",
                            data=json_data, headers=headers
                           )

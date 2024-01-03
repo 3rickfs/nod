@@ -3,7 +3,7 @@ import time
 import requests
 import json
 
-from nod.nod import nod
+#from nod.nod import nod
 
 class distribution_tests(unittest.TestCase):
     """
@@ -81,6 +81,7 @@ class distribution_tests(unittest.TestCase):
             input_json_file["CoN_parameters"] = CoN_parameters
             input_json_file["nod_ops_endpoints"] = "./nod_ops_endpoints.txt"
             input_json_file["nod_dis_endpoints"] = "./nod_dis_endpoints.txt"
+            input_json_file["synapses_process_id"] = synapses_process_id
             json_data = json.dumps(input_json_file)
             result = requests.post("http://localhost:7000/distribute_neurons",
                                    data=json_data, headers=headers
@@ -117,7 +118,7 @@ class distribution_tests(unittest.TestCase):
                                    data=json_data, headers=headers
                                   )
 
-            expected_result = []
+            expected_result = [1.5349037952800018]
 
 
             print("__________________________________")

@@ -13,9 +13,9 @@ syn_proc = None
 def get_synapses_obj_memory_address(synapses_process_id):
     print("Getting synapses object memory address")
     with open("synapses_processes.json", "r") as jsonfile:
-        self.synapses_processes = json.load(jsonfile)
+        synapses_processes = json.load(jsonfile)
     jsonfile.close()
-    return self.synapses_processes[str(synapses_process_id)]
+    return synapses_processes[str(synapses_process_id)]
 
 @app.route("/model_to_neuron_sets", methods = ['POST'])
 def model_to_neuron_sets():
@@ -46,6 +46,7 @@ def distribute_neurons():
     #Need other EP to send neuorns info from NO to NODs
     nod_dis_ep = read_endpoints(json_data["nod_dis_endpoints"])
     neuro_orchestrator_ep = ["http://localhost:7000/set_final_output"]
+    synapses_process_id = json_data["synapses_process_id"]
     #Orchestration planning
     try:
         nod_dict = OrchPlannerOps.run(
@@ -58,8 +59,9 @@ def distribute_neurons():
     #Distribution of neurons
     try:
         nod_res = start_distribution(nod_dict,
-                                    nod_dis_ep
-                                   )
+                                     nod_dis_ep,
+                                     synapses_process_id
+                                    )
     except Exception as e:
         print(f"error during orchestration planning: {e}")
 
@@ -100,7 +102,7 @@ def set_final_output():
     )
     #TODO: see if it's actually necessary to use syn_proc_id
     syn_proc = ctypes.cast(int(input_data["synapses_process_id"]), ctypes.py_object).value
-    syn_proc.set_synapses_output(input_data["final_output"])
+    syn_proc.set_synapses_output(input_data["inputs"])
 
     return "ok"
 

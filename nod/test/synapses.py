@@ -18,7 +18,7 @@ class synapses_process():
         self.synapses_processes[str(nodo_ma)] = nodo_ma
         self.synapses_process_id = nodo_ma
         with open("synapses_processes.json", "w") as jsonfile:
-            json.dump(json.dumps(str(self.synapses_processes)), jsonfile)
+            json.dump(self.synapses_processes, jsonfile)
         jsonfile.close()
 
     def set_mem_adr(self, mem_adr):

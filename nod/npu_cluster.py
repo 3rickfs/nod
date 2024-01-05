@@ -104,7 +104,6 @@ class execute_synapse(neuron_ops):
 
     def run_operation(**kwargs):
         print("Start synapse, sending inputs to next nod")
-        print(f"Destination NOD: {kwargs['output_eps'][0]}")
 
         nod_input = {
             "input_names": kwargs["output_names"],
@@ -117,9 +116,13 @@ class execute_synapse(neuron_ops):
         #for n in range(len(kwargs["output_ep"])):
         json_data = json.dumps(nod_input)
         headers = {'Content-type': 'application/json'}
-        result = requests.post(kwargs["output_eps"][0],
-                               data=json_data, headers=headers
-                              )
+        print(f"output_eps: {kwargs['output_eps']}")
+        for oeps in range(len(kwargs["output_ep"])):
+            print("entro")
+            print(f"Sending synapse msg to: {kwargs['output_eps'][oeps]}")
+            result = requests.post(kwargs["output_eps"][oeps],
+                                   data=json_data, headers=headers
+                                  )
 
         return kwargs
 

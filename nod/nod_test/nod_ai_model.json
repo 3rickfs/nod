@@ -1,1 +1,1 @@
-{"nod_id": "2", "capa_id": "2", "input_names": ["o1", "o2"], "pesos": [[0.45945024490356445, -0.9359937906265259]], "biases": [0.0], "fas": ["relu"], "output_names": ["o3"], "output_ep": ["http://localhost:7000/set_final_output"], "synapses_process_id": 139690589961040}
+{"nod_id": "2", "capa_id": "2", "input_names": ["o1", "o2"], "pesos": [[0.45945024490356445, -0.9359937906265259]], "biases": [0.0], "fas": ["relu"], "output_names": ["o3"], "output_ep": ["http://localhost:7000/set_final_output"], "synapses_process_id": 140022856473424}

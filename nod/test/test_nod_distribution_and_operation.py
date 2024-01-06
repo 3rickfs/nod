@@ -60,6 +60,7 @@ class distribution_tests(unittest.TestCase):
 
         try:
 
+            #Starting synapses process
             headers = {'Content-type': 'application/json'}
             syn_pro_input = {
                 "ai_model_path": "lala.model",
@@ -73,6 +74,7 @@ class distribution_tests(unittest.TestCase):
 
             synapses_process_id = json.loads(result.text)["synapses_process_id"]
 
+            #Load the AI model JSON
             with open(input_file_name, 'r') as jf:
                 input_json_file = json.load(jf)
             jf.close()
@@ -86,11 +88,6 @@ class distribution_tests(unittest.TestCase):
             result = requests.post("http://localhost:7000/distribute_neurons",
                                    data=json_data, headers=headers
                                   )
-
-            #get lists of NOD objs mem addrss
-            #mem_adrs = []
-            #for l in range(len(2)):
-            #    mem_adrs.append(json.loads(result.text)[l]["nodo_mem_adr"])
 
             #send inputs to NODS
             nod_input = {

@@ -8,6 +8,13 @@ class synapses_process():
         self.synapses_output = []
         self.synapses_processes = {}
         self.synapses_process_id = 0
+        self.fleps = []
+
+    def save_fleps(self, fleps):
+        self.fleps = fleps
+
+    def read_fleps(self):
+        return self.fleps
 
     def read_synapses_output(self):
         print("Reading synpases output")

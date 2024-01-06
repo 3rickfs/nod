@@ -19,7 +19,7 @@ def save_nod_info_in_dict(nod_id, capa_id, input_names, pesos, biases, fas,
     jsn["biases"] = biases
     jsn["fas"] = fas
     jsn["output_names"] = output_names
-    jsn["output_ep"] = [output_ep[i] for i in range(len(output_names))]
+    jsn["output_ep"] = [output_ep[i] for i in range(len(output_ep))]
 
     return jsn
 

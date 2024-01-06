@@ -1,7 +1,7 @@
 import requests
 import json
 
-def start_distribution(nod_dict, nod_ep, synapses_process_id):
+def start_distribution(nod_dict, nod_eps, synapses_process_id):
     """ Start distributing neurons to every NOD according
         to the previuosly stablished plan.
     """
@@ -14,8 +14,8 @@ def start_distribution(nod_dict, nod_ep, synapses_process_id):
         headers = {'Content-type': 'application/json'}
         #TODO: save obj mem addrs info of every nod to be saved in the
         # synpase process obj
-        print(f"Sending to: {nod_ep[nod_idx-1]}")
-        result = requests.post(nod_ep[nod_idx-1],
+        print(f"Sending to: {nod_eps[nod_idx-1]}")
+        result = requests.post(nod_eps[nod_idx-1],
                                data=json_data,
                                headers=headers
                               )
@@ -24,4 +24,15 @@ def start_distribution(nod_dict, nod_ep, synapses_process_id):
 
     return nod_res
 
+def start_first_layer_input_distribution(nod_input, nod_eps):
+    """ Distribute same input to every single nod in first layer
+    """
 
+    for nod_ep in nod_eps:
+        print(f"Sending inputs to nod: {nod_ep}")
+        json_data = json.dumps(nod_input)
+        headers = {'Content-type': 'application/json'}
+        result = requests.post(nod_ep,
+                               data=json_data,
+                               headers=headers
+                              )

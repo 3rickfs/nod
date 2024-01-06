@@ -131,14 +131,17 @@ class nod():
 
         return result
 
-    def verify_input(self, entrante_input_names, input_idx):
-        if self.input_names == entrante_input_names:
-            return True
-        else:
-           return False
+    def verify_input(self, entrante_input_names):
+        res = False
+        for ein in entrante_input_names:
+            if ein in self.input_names:
+                res = True
+            else:
+                return False
+        return res
 
     def set_inputs(self, inputs, entrante_input_names, input_idx):
-        if self.verify_input(entrante_input_names, input_idx):
+        if self.verify_input(entrante_input_names):
             print("Inputs accepted")
             inpts = self.inputs
             for j, idx in enumerate(input_idx):

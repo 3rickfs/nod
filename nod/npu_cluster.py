@@ -108,6 +108,7 @@ class execute_synapse(neuron_ops):
         nod_input = {
             "input_names": kwargs["output_names"],
             "inputs": kwargs["o"],
+            #TODO: fix this input_idx thing to have proper values according to output_names
             "input_idx": [i for i in range(len(kwargs["o"]))],
             "synapses_process_id": kwargs["synapses_process_id"]
         }
@@ -117,7 +118,8 @@ class execute_synapse(neuron_ops):
         json_data = json.dumps(nod_input)
         headers = {'Content-type': 'application/json'}
         print(f"output_eps: {kwargs['output_eps']}")
-        for oeps in range(len(kwargs["output_ep"])):
+        print(f"output_eps len: {len(kwargs['output_eps'])}")
+        for oeps in range(len(kwargs["output_eps"])):
             print("entro")
             print(f"Sending synapse msg to: {kwargs['output_eps'][oeps]}")
             result = requests.post(kwargs["output_eps"][oeps],

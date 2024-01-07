@@ -28,11 +28,15 @@ def start_first_layer_input_distribution(nod_input, nod_eps):
     """ Distribute same input to every single nod in first layer
     """
 
+    json_data = json.dumps(nod_input)
+    nod_res = []
+    headers = {'Content-type': 'application/json'}
     for nod_ep in nod_eps:
         print(f"Sending inputs to nod: {nod_ep}")
-        json_data = json.dumps(nod_input)
-        headers = {'Content-type': 'application/json'}
         result = requests.post(nod_ep,
                                data=json_data,
                                headers=headers
                               )
+        nod_res.append(result.text)
+
+    return nod_res

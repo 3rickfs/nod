@@ -3,6 +3,9 @@ import time
 import requests
 import json
 
+import keras
+import numpy as np
+
 #from nod.nod import nod
 
 class distribution_tests(unittest.TestCase):
@@ -58,6 +61,16 @@ class distribution_tests(unittest.TestCase):
             "nod_num": 10
         }
 
+        #Run above model in TF format to get the expected result
+        model = keras.models.load_model(
+            "./model_to_be_distributed_and_executed_1.keras"
+        )
+        inp_dic = [2, 3, 4, 5]
+        inp = np.array(inp_dic).reshape(1, 4)
+        print(f"model input: {inp}")
+        expected_result = str(round(model.predict(inp)[0][0], 4)) #[1.5349037952800018]
+        print(expected_result)
+
         try:
 
             #Starting synapses process
@@ -92,8 +105,8 @@ class distribution_tests(unittest.TestCase):
             #send inputs to NODS
             nod_input = {
                 "input_names": ["x1", "x2", "x3", "x4"],
-                "inputs": [2, 3, 4, 5],
-                "input_idx": [0, 1, 2, 3],
+                "inputs": inp_dic,
+                "input_idx": [0, 1, 2, 3], #double check this
                 "synapses_process_id": synapses_process_id
             }
 
@@ -114,15 +127,13 @@ class distribution_tests(unittest.TestCase):
             result = requests.post("http://localhost:7000/read_synapses_process_output",
                                    data=json_data, headers=headers
                                   )
-
-            expected_result = [1.5349037952800018]
-
+            result = str(round(json.loads(result.text)[0], 4))
 
             print("__________________________________")
-            print(f"result: {result.text}")
+            print(f"result: {result}")
             print("__________________________________")
             print(f"expected_result: {expected_result}")
-            self.assertEqual(expected_result, json.loads(result.text))
+            self.assertEqual(expected_result, result)
         except Exception as e:
             print("%"*100)
             print(f"error: {e}")

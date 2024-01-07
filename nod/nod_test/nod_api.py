@@ -91,6 +91,7 @@ def get_neuron_outputs():
 @app.route("/send_nod_inputs", methods=['POST'])
 def send_nod_inputs():
     input_data = request.get_json()
+    print(f"input data type: {type(input_data)}")
     #input_data = input_data.replace("\'", "\"")
     #input_data = json.loads(input_data)
 

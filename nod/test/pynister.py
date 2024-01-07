@@ -5,8 +5,9 @@ from flask import Flask, request
 
 from orchestration_planner import read_endpoints, OrchPlannerOps
 from synapses import synapses_process
-from neuron_distributor import start_distribution,
-                               start_first_layer_input_distribution
+from neuron_distributor import (start_distribution,
+                                start_first_layer_input_distribution
+                               )
 
 app = Flask(__name__)
 syn_proc = None
@@ -22,9 +23,12 @@ def get_synapses_obj_memory_address(synapses_process_id):
 def get_fleps(nod_info):
     print("Getting first layer endpoints")
     fleps = []
+    #print(f"nod info: {nod_info}")
     for nodi in nod_info:
-        if nod_info[nodi]["capa_id"] == 1: #first layer
-            fleps.append(nod_info[nodi]["output_ep"])
+        cid = int(nod_info[nodi]["capa_id"])
+        if cid == 1: #first layer only
+            print(f"nod first layer endpoint: {(nod_info[nodi]['nod_ep'])}")
+            fleps.append(nod_info[nodi]["nod_ep"])
         else:
             break
 
@@ -77,9 +81,8 @@ def distribute_neurons():
         )["nod_dict"]
     except Exception as e:
         print(f"error during orchestration planning: {e}")
-    #TODO: add new variable first_layer_eps to handle eps to be used later
     #Getting first layer endpoints and save them into synapses process obj
-    fl_eps = get_fleps(nod_res)
+    fl_eps = get_fleps(nod_dict)
     syn_proc.save_fleps(fl_eps)
     #Distribution of neurons
     try:
@@ -113,16 +116,10 @@ def send_inputs_to_1layer_nods():
         ctypes.py_object
     ).value
     nod_eps = syn_proc.read_fleps()
-    start_first_layer_input_distribution(input_data,
-                                         nod_eps)
-    #json_data = json.dumps(input_data)
-    #TODO: Change the following endpoint properly
-    #headers = {'Content-type': 'application/json'}
-    #result = requests.post("http://localhost:5000/send_nod_inputs",
-    #                       data=json_data, headers=headers
-    #                      )
+    result = start_first_layer_input_distribution(input_data,
+                                                  nod_eps)
 
-    return result.text
+    return json.dumps(result)
 
 @app.route("/set_final_output", methods=['POST'])
 def set_final_output():
@@ -130,7 +127,7 @@ def set_final_output():
     syn_proc_id = get_synapses_obj_memory_address(
         input_data["synapses_process_id"]
     )
-    #TODO: see if it's actually necessary to use syn_proc_id
+    #TODO: see if it's actually necessary to use syn_proc_id, seems it doesn't
     syn_proc = ctypes.cast(
         int(input_data["synapses_process_id"]),
         ctypes.py_object

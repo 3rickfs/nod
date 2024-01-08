@@ -9,7 +9,7 @@ def not_repeat(input_names):
     return input_names[0]
 
 def save_nod_info_in_dict(nod_id, capa_id, input_names, pesos, biases, fas,
-                          output_names, output_ep
+                          output_names, nod_ep, output_ep
                          ):
     jsn = {}
     jsn["nod_id"] = str(nod_id)
@@ -19,6 +19,7 @@ def save_nod_info_in_dict(nod_id, capa_id, input_names, pesos, biases, fas,
     jsn["biases"] = biases
     jsn["fas"] = fas
     jsn["output_names"] = output_names
+    jsn["nod_ep"] = nod_ep
     jsn["output_ep"] = [output_ep[i] for i in range(len(output_ep))]
 
     return jsn

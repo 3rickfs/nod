@@ -29,7 +29,6 @@ def save_neurons():
     nod_data = request.get_json()
     nod_data = nod_data.replace("\'", "\"")
     nod_data = json.loads(nod_data)
-    print(f"nod_data: {nod_data}")
 
     try:
         nodo = nod()
@@ -93,7 +92,6 @@ def get_neuron_outputs():
 def send_nod_inputs():
     input_data = request.get_json()
     print(f"input data type: {type(input_data)}")
-    print(f"input data: {input_data}")
     #input_data = input_data.replace("\'", "\"")
     #input_data = json.loads(input_data)
 

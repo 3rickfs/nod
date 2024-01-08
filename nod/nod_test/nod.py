@@ -144,8 +144,15 @@ class nod():
         if self.verify_input(entrante_input_names):
             print("Inputs accepted")
             inpts = self.inputs
+            print(f"inpts size: {len(inpts)}")
+            print(f"inputs size: {len(inputs)}")
+            print(f"input idx size: {len(input_idx)}")
             for j, idx in enumerate(input_idx):
-                inpts[idx] = inputs[j]
+                print(f"idx: {idx}")
+                print(f"j: {j}")
+                #inpts[idx] = inputs[j]
+                i = idx - int(self.input_names[0][1:]) - 1
+                inpts[i] = inputs[j]
                 self.input_num_count += 1
             self.inputs = inpts
             if self.input_num == self.input_num_count:

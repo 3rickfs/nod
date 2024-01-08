@@ -108,6 +108,7 @@ class execute_synapse(neuron_ops):
         nod_input = {
             "input_names": kwargs["output_names"],
             "inputs": kwargs["o"],
+            #TODO: fix this input_idx thing to have proper values according to output_names
             #"input_idx": [i for i in range(len(kwargs["o"]))],
             "input_idx": [int(n[1:]) - 1 for n in kwargs["output_names"]],
             "synapses_process_id": kwargs["synapses_process_id"]

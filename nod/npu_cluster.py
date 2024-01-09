@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
 import json
 import requests
 
+import numpy as np
+
 class neuron_ops(ABC):
     """
     """
@@ -65,10 +67,14 @@ class apply_fa(neuron_ops):
     def run_operation(**kwargs):
         print("Aplicar la funcion de activacion")
         kwargs["o"] = []
-        for i in range(len(kwargs["sb"])):
-            if kwargs["fas"][i] == "relu":
+
+        if kwargs["fas"][i] == "relu":
+            for i in range(len(kwargs["sb"])):
                 kwargs["o"].append(max(0, kwargs["sb"][i]))
-                #TODO: code softmax function
+        elif kwargs["fas"][i] == "softmax":
+            x = np.array(kwargs["sb"])
+            ex = np.exp(x - np.max(x))
+            kwargs["o"] = ex / ex.sum()
 
         return kwargs
 

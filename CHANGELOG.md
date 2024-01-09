@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.0.3] 2024-01-08
+### Add
+- Second test in test_nod_distribution_and_operation.py running ok, distributing a 19-neuron model using 6 NODs
+
 ## [1.0.2] 2024-01-07
 ### Add
 - Working properly distribution process named synapses process. This saves every aspect of the prediction that was carried out, it even will be able to save many predictions done by the same synapses configuration. It's possible to save many synapses, but it was not tested yet. The successful test is in ./nod/test/test_nod_distribution_and_operation.py. It just tests a model of 3 neurons and two NODs. Next tests are going to be considered with bigger models.

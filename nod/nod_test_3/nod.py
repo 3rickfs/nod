@@ -147,11 +147,14 @@ class nod():
             print(f"inpts size: {len(inpts)}")
             print(f"inputs size: {len(inputs)}")
             print(f"input idx size: {len(input_idx)}")
+            print(f"input names: {self.input_names}")
+            print(f"inputn_names[0][1:] : {int(self.input_names[0][1:])}")
             for j, idx in enumerate(input_idx):
                 print(f"idx: {idx}")
                 print(f"j: {j}")
                 #inpts[idx] = inputs[j]
-                i = idx - int(self.input_names[0][1:]) - 1
+                i = int(idx) - int(self.input_names[0][1:]) + 1
+                print(f"i: {i}")
                 inpts[i] = inputs[j]
                 self.input_num_count += 1
             self.inputs = inpts

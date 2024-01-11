@@ -68,13 +68,17 @@ class apply_fa(neuron_ops):
         print("Aplicar la funcion de activacion")
         kwargs["o"] = []
 
-        if kwargs["fas"][i] == "relu":
-            for i in range(len(kwargs["sb"])):
+        #TODO: check if is worth the way of having different fa for each neuron
+        for i in range(len(kwargs["sb"])):
+            if kwargs["fas"][i] == "relu":
                 kwargs["o"].append(max(0, kwargs["sb"][i]))
-        elif kwargs["fas"][i] == "softmax":
+
+        #for now considering softmax for all the neurons of a layer in a NOD
+        if kwargs["fas"][0] == "softmax":
             x = np.array(kwargs["sb"])
             ex = np.exp(x - np.max(x))
-            kwargs["o"] = ex / ex.sum()
+            r = ex / ex.sum()
+            kwargs["o"] = [v for v in r] #np to list
 
         return kwargs
 
@@ -122,8 +126,8 @@ class execute_synapse(neuron_ops):
         #for n in range(len(kwargs["output_ep"])):
         json_data = json.dumps(nod_input)
         headers = {'Content-type': 'application/json'}
-        #print(f"output_eps: {kwargs['output_eps']}")
-        #print(f"output_eps len: {len(kwargs['output_eps'])}")
+        print(f"output_eps: {kwargs['output_eps']}")
+        print(f"output_eps len: {len(kwargs['output_eps'])}")
         for oeps in range(len(kwargs["output_eps"])):
             print(f"Sending synapse msg to: {kwargs['output_eps'][oeps]}")
             result = requests.post(kwargs["output_eps"][oeps],

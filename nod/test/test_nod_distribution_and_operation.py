@@ -259,7 +259,8 @@ class distribution_tests(unittest.TestCase):
         print(f"model input: {inp}")
         pred = model.predict(inp)
         print(f"pred: {pred}")
-        expected_result = str(pred) #[1.5349037952800018]
+        #expected_result = str(pred) #[1.5349037952800018]
+        expected_result = [str(round(v, 4)) for v in pred[0]]
         print(expected_result)
 
         try:
@@ -324,7 +325,8 @@ class distribution_tests(unittest.TestCase):
                                    data=json_data, headers=headers
                                   )
             #print(f"result: {result.text}")
-            result = str(json.loads(result.text))
+            r = json.loads(result.text)
+            result = [str(round(v, 4)) for v in r]
 
             print("__________________________________")
             print(f"result: {result}")

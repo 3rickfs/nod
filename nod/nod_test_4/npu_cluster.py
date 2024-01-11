@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
 import json
 import requests
 
+import numpy as np
+
 class neuron_ops(ABC):
     """
     """
@@ -65,10 +67,18 @@ class apply_fa(neuron_ops):
     def run_operation(**kwargs):
         print("Aplicar la funcion de activacion")
         kwargs["o"] = []
+
+        #TODO: check if is worth the way of having different fa for each neuron
         for i in range(len(kwargs["sb"])):
             if kwargs["fas"][i] == "relu":
                 kwargs["o"].append(max(0, kwargs["sb"][i]))
-                #TODO: code softmax function
+
+        #for now considering softmax for all the neurons of a layer in a NOD
+        if kwargs["fas"][0] == "softmax":
+            x = np.array(kwargs["sb"])
+            ex = np.exp(x - np.max(x))
+            r = ex / ex.sum()
+            kwargs["o"] = [v for v in r] #np to list
 
         return kwargs
 
@@ -116,8 +126,8 @@ class execute_synapse(neuron_ops):
         #for n in range(len(kwargs["output_ep"])):
         json_data = json.dumps(nod_input)
         headers = {'Content-type': 'application/json'}
-        #print(f"output_eps: {kwargs['output_eps']}")
-        #print(f"output_eps len: {len(kwargs['output_eps'])}")
+        print(f"output_eps: {kwargs['output_eps']}")
+        print(f"output_eps len: {len(kwargs['output_eps'])}")
         for oeps in range(len(kwargs["output_eps"])):
             print(f"Sending synapse msg to: {kwargs['output_eps'][oeps]}")
             result = requests.post(kwargs["output_eps"][oeps],

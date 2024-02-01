@@ -1,7 +1,7 @@
 # Create the nod classes
 import json
 
-from npu_cluster import NPUClusterOps
+from nod.npu_cluster import NPUClusterOps
 
 class nod():
     """ Define el nod procesador coordinador incluyendo sus atributos y metodos

@@ -2,8 +2,35 @@ import os
 from abc import ABC, abstractmethod
 import json
 import requests
+import math
 
-import numpy as np
+#import numpy as np
+
+# softmax function
+def softmax(z):
+	# vector to hold exponential values
+	exponents = []
+	# vector to hold softmax probabilities
+	softmax_prob = []
+	# sum of exponentials
+	exp_sum = 0
+	# for each value in the input vector
+	for value in z:
+		# calculate the exponent
+		exp_value = math.exp(value)
+		# append to exponent vector
+		exponents.append(exp_value)
+		# add to exponential sum
+		exp_sum += exp_value
+
+	# for each exponential value
+	for value in exponents:
+		# calculate softmax probability
+		probability = value / exp_sum
+		# append to probability vector
+		softmax_prob.append(probability)
+
+    return softmax_prob
 
 class neuron_ops(ABC):
     """
@@ -75,10 +102,11 @@ class apply_fa(neuron_ops):
 
         #for now considering softmax for all the neurons of a layer in a NOD
         if kwargs["fas"][0] == "softmax":
-            x = np.array(kwargs["sb"])
-            ex = np.exp(x - np.max(x))
-            r = ex / ex.sum()
-            kwargs["o"] = [v for v in r] #np to list
+            #x = np.array(kwargs["sb"])
+            #ex = np.exp(x - np.max(x))
+            #r = ex / ex.sum()
+            #kwargs["o"] = [v for v in r] #np to list
+            kwargs["o"] = softmax(kwargs["sb"])
 
         return kwargs
 

@@ -299,7 +299,3 @@ class distribution_tests(unittest.TestCase):
 
         print("*"*100)
 
-
-if __name__ == '__main__':
-    unittest.main()
-

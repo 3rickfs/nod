@@ -20,13 +20,14 @@ def get_nodo_mem_adr(synapses_process_id):
 @app.route("/")
 def hello_world():
     return "<p>Hello, World! I'm a virtual NOD (Neuro Orchestrated Device)"+ \
-           " running in EKS cluster in AWS as a pod. So I'm ready for running"+ \
+           " running in an AWS EKS cluster as a pod. I'm now ready for running"+ \
            " multiple neurons. Nice to meet you.</p>"
 
 @app.route("/save_neurons", methods=['POST'])
 def save_neurons():
     global nodo
     nod_data = request.get_json()
+    #TODO: review this type of handling coming strings
     nod_data = nod_data.replace("\'", "\"")
     nod_data = json.loads(nod_data)
     print(f"nod_data: {nod_data}")

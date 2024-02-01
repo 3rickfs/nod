@@ -8,27 +8,27 @@ import math
 
 # softmax function
 def softmax(z):
-	# vector to hold exponential values
-	exponents = []
-	# vector to hold softmax probabilities
-	softmax_prob = []
-	# sum of exponentials
-	exp_sum = 0
-	# for each value in the input vector
-	for value in z:
-		# calculate the exponent
-		exp_value = math.exp(value)
-		# append to exponent vector
-		exponents.append(exp_value)
-		# add to exponential sum
-		exp_sum += exp_value
+    # vector to hold exponential values
+    exponents = []
+    # vector to hold softmax probabilities
+    softmax_prob = []
+    # sum of exponentials
+    exp_sum = 0
+    # for each value in the input vector
+    for value in z:
+        # calculate the exponent
+        exp_value = math.exp(value)
+        # append to exponent vector
+        exponents.append(exp_value)
+        # add to exponential sum
+        exp_sum += exp_value
 
-	# for each exponential value
-	for value in exponents:
-		# calculate softmax probability
-		probability = value / exp_sum
-		# append to probability vector
-		softmax_prob.append(probability)
+    # for each exponential value
+    for value in exponents:
+        # calculate softmax probability
+        probability = value / exp_sum
+        # append to probability vector
+        softmax_prob.append(probability)
 
     return softmax_prob
 

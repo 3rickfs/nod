@@ -141,26 +141,27 @@ class execute_synapse(neuron_ops):
     """
 
     def run_operation(**kwargs):
-        print("Start synapse, sending inputs to next nod")
+        if kwargs["send_output_2_eps"]:
+            print("Start synapse, sending inputs to next nod")
 
-        nod_input = {
-            "input_names": kwargs["output_names"],
-            "inputs": kwargs["o"],
-            #"input_idx": [i for i in range(len(kwargs["o"]))],
-            "input_idx": [int(n[1:]) - 1 for n in kwargs["output_names"]],
-            "synapses_process_id": kwargs["synapses_process_id"]
-        }
+            nod_input = {
+                "input_names": kwargs["output_names"],
+                "inputs": kwargs["o"],
+                #"input_idx": [i for i in range(len(kwargs["o"]))],
+                "input_idx": [int(n[1:]) - 1 for n in kwargs["output_names"]],
+                "synapses_process_id": kwargs["synapses_process_id"]
+            }
 
-        #for n in range(len(kwargs["output_ep"])):
-        json_data = json.dumps(nod_input)
-        headers = {'Content-type': 'application/json'}
-        print(f"output_eps: {kwargs['output_eps']}")
-        print(f"output_eps len: {len(kwargs['output_eps'])}")
-        for oeps in range(len(kwargs["output_eps"])):
-            print(f"Sending synapse msg to: {kwargs['output_eps'][oeps]}")
-            result = requests.post(kwargs["output_eps"][oeps],
-                                   data=json_data, headers=headers
-                                  )
+            #for n in range(len(kwargs["output_ep"])):
+            json_data = json.dumps(nod_input)
+            headers = {'Content-type': 'application/json'}
+            print(f"output_eps: {kwargs['output_eps']}")
+            print(f"output_eps len: {len(kwargs['output_eps'])}")
+            for oeps in range(len(kwargs["output_eps"])):
+                print(f"Sending synapse msg to: {kwargs['output_eps'][oeps]}")
+                result = requests.post(kwargs["output_eps"][oeps],
+                                       data=json_data, headers=headers
+                                      )
 
         return kwargs
 

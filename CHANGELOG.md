@@ -1,5 +1,10 @@
 # Change Log
 
+
+## [1.1.0] 2024-01-08
+### Add
+- New feature for distirbuiting not just neurons but entire layers. A test for running a 5 neuron and 2 layer based model in just one nod. Test file: /nod/test/test_nod_ops_2.py
+
 ## [1.0.3] 2024-01-08
 ### Add
 - Second test in test_nod_distribution_and_operation.py running ok, distributing a 19-neuron model using 6 NODs

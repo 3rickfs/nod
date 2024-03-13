@@ -89,7 +89,7 @@ class nod():
                 zeros = [0 for i in range(l)]
                 self.inputs.append(zeros.copy())
                 self.input_num_count.append(zeros.copy())
-            print(f"set up inputs: {self.inputs}")
+            #print(f"set up inputs: {self.inputs}")
             #self.neuron_outputs = [0 for i in range(len(self.pesos))]
             #self.nod_memory_address = nod_data["nod_memory_address"]
             self.synapses_process_id = nod_data["synapses_process_id"]
@@ -110,7 +110,7 @@ class nod():
             #TODO: update following file path according to real nods
             with open("./nod_ai_model.json","w") as jsonfile:
                 #json.dump(json.dumps(str(nod_data)), jsonfile)
-                print(f"Saving nod_data: {type(nod_data)}")
+                #print(f"Saving nod_data: {type(nod_data)}")
                 json.dump(nod_data, jsonfile)
             jsonfile.close()
 
@@ -127,6 +127,10 @@ class nod():
             while True:
                 indx = layer_id + lid
                 lnum = len(self.capa_ids)
+                so2e = False
+                #if indx < len(self.output_eps) 
+                if self.output_eps[indx] != []:
+                    so2e = True
                 result = NPUClusterOps.run(
                     inputs = self.inputs[indx],
                     pesos = self.pesos[indx],
@@ -136,9 +140,9 @@ class nod():
                     output_names = self.output_names[indx],
                     #output_ip = self.output_ip,
                     #output_port = self.output_port
-                    output_eps = self.output_eps,
+                    output_eps = self.output_eps[indx],
                     synapses_process_id = self.synapses_process_id,
-                    send_output_2_eps = False #TODO: self.so2eps[indx] #False #what happens if this is for the same nod
+                    send_output_2_eps = so2e #TODO: self.so2eps[indx] #False #what happens if this is for the same nod
                 )
                 if lnum > 1 and indx < lnum - 1:
                     lid += 1 #next layer
@@ -183,35 +187,34 @@ class nod():
     def set_inputs(self, inputs, entrante_input_names, input_idx, layer_id):
         indx = layer_id - self.flid
         if self.verify_input(entrante_input_names, indx):
-            print("Inputs accepted")
-            print(f"coming inputs: {inputs}")
-            print(f"indx: {indx}")
-            print(f"inputs: {self.inputs}")
+            #print("Inputs accepted")
+            #print(f"coming inputs: {inputs}")
+            #print(f"indx: {indx}")
+            #print(f"inputs: {self.inputs}")
             inpts = self.inputs[indx]
-            print(f"layer id: {layer_id}")
-            print(f"inpts size: {len(inpts)}")
-            print(f"inputs size: {len(inputs)}")
-            print(f"input idx size: {len(input_idx)}")
-            print(f"input names: {self.input_names}")
-            print(f"inputn_names[0][1:]: {int(self.input_names[0][0][1:])}")
+            #print(f"layer id: {layer_id}")
+            #print(f"inpts size: {len(inpts)}")
+            #print(f"inputs size: {len(inputs)}")
+            #print(f"input idx size: {len(input_idx)}")
+            #print(f"input names: {self.input_names}")
+            #print(f"inputn_names[0][1:]: {int(self.input_names[0][0][1:])}")
             for j, idx in enumerate(input_idx):
-                print(f"idx: {idx}")
-                print(f"j: {j}")
+                #print(f"idx: {idx}")
+                #print(f"j: {j}")
                 #inpts[idx] = inputs[j]
-                i = int(idx) - int(self.input_names[indx][0][1:]) #+ 1
-                print(f"i: {i}")
-                print(f"selected input: {inputs[j]}")
+                i = int(idx) - int(self.input_names[indx][0][1:]) + 1
+                #print(f"i: {i}")
+                #print(f"selected input: {inputs[j]}")
                 inpts[i] = inputs[j]
                 self.input_num_count[indx][i] = 1
-            print(f"inpts: {inpts}")
+            #print(f"inpts: {inpts}")
             self.inputs[indx] = inpts
-            print(f"input num count: {self.input_num_count[indx]}")
+            #print(f"input num count: {self.input_num_count[indx]}")
 
-            #TODO: Change the input num count approach
             #if self.input_num[indx] == self.input_num_count[indx]:
             #for l in : #for all layers
             if not 0 in self.input_num_count[indx]:
-                print(f"Ready for running the models with following inpunts: {self.inputs}")
+                #print(f"Ready for running the models with following inpunts: {self.inputs}")
                 self.status = "ready" #TODO: integrate nod's status management
                 zeros = [0 for i in range(self.input_num[layer_id])]
                 self.input_num_count[indx] = zeros

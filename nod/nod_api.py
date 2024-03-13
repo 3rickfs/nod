@@ -28,9 +28,13 @@ def save_neurons():
     global nodo
     nod_data = request.get_json()
     #TODO: review this type of handling coming strings
-    nod_data = nod_data.replace("\'", "\"")
-    nod_data = json.loads(nod_data)
-    print(f"nod_data: {nod_data}")
+    #print(nod_data)
+    #nod_data = nod_data.replace("\'", "\"")
+    #print(nod_data)
+    #print("------------------------------------")
+    #print(type(nod_data))
+    #nod_data = json.loads(nod_data)
+    #print(f"nod_data: {nod_data}")
 
     try:
         nodo = nod()
@@ -52,7 +56,8 @@ def save_neurons():
     except Exception as e:
         print(f"Error during getting nod parameters: {e}")
         result = {"result": f"error during getting nod params: {e}"}
-
+    
+    print("FINISHHED")
     return json.dumps(result)
 
 @app.route("/set_nod_inputs", methods=['POST'])
@@ -64,7 +69,8 @@ def set_inputs():
         nodo = ctypes.cast(int(input_data["nodo_mem_adr"]), ctypes.py_object).value
         if nodo.set_inputs(input_data["inputs"],
                            input_data["input_names"],
-                           input_data["input_idx"]
+                           input_data["input_idx"],
+                           input_data["layer_id"]
                           ):
             result = {"result": "nod inputs transferred"}
             outputs = 123
@@ -93,8 +99,8 @@ def get_neuron_outputs():
 @app.route("/send_nod_inputs", methods=['POST'])
 def send_nod_inputs():
     input_data = request.get_json()
-    print(f"input data type: {type(input_data)}")
-    print(f"input data: {input_data}")
+    #print(f"input data type: {type(input_data)}")
+    #print(f"input data: {input_data}")
     #input_data = input_data.replace("\'", "\"")
     #input_data = json.loads(input_data)
 
@@ -105,7 +111,8 @@ def send_nod_inputs():
         #nodo.set_nod_destinations(input_data["nodo_mem_adr_dstn"])
         if nodo.set_inputs(input_data["inputs"],
                            input_data["input_names"],
-                           input_data["input_idx"]
+                           input_data["input_idx"],
+                           input_data["layer_id"]
                           ):
             result = {"result": "nod inputs transferred"}
             outputs = 123

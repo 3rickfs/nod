@@ -52,11 +52,11 @@ class mul_vectors(neuron_ops):
         inpts = kwargs["inputs"]
         for i in range(len(kwargs["pesos"])):
             #print(kwargs["inputs"]["i1"][i])
-            print(inpts)
-            print(kwargs["pesos"][i])
+            #print(inpts)
+            #print(kwargs["pesos"][i])
             mu = [x*w for w, x in zip(kwargs["pesos"][i], inpts)]
             m.append(mu)
-        print(m)
+        #print(m)
         kwargs["m"] = m
 
         return kwargs
@@ -132,7 +132,7 @@ class create_output_msgs(neuron_ops):
             'inputs': kwargs["o"]
         }
         kwargs["output_msg"] = output_msg
-        print(output_msg)
+        #print(output_msg)
 
         return kwargs
 
@@ -155,10 +155,10 @@ class execute_synapse(neuron_ops):
             #for n in range(len(kwargs["output_ep"])):
             json_data = json.dumps(nod_input)
             headers = {'Content-type': 'application/json'}
-            print(f"output_eps: {kwargs['output_eps']}")
-            print(f"output_eps len: {len(kwargs['output_eps'])}")
+            #print(f"output_eps: {kwargs['output_eps']}")
+            #print(f"output_eps len: {len(kwargs['output_eps'])}")
             for oeps in range(len(kwargs["output_eps"])):
-                print(f"Sending synapse msg to: {kwargs['output_eps'][oeps]}")
+                #print(f"Sending synapse msg to: {kwargs['output_eps'][oeps]}")
                 result = requests.post(kwargs["output_eps"][oeps],
                                        data=json_data, headers=headers
                                       )

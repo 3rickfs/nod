@@ -19,12 +19,12 @@ class neuron_ops_test_cases(unittest.TestCase):
             "fas": [["relu", "relu", "relu"], ["relu", "relu"]],
             "capa_ids": [0, 1],
             "output_names": [["o0", "o1", "o2"], ["o3", "o4"]],
-            "output_port": ["6339"],
+            "output_port": ["6339"], #this is no longer needed
             "input_names": [["i0", "i1", "i2"], ["o0", "o1", "o2"]],
             "output_eps": ["192.168.0.1:5000"],
             "input_num": [3, 3],
-            "inputs": [[0, 0, 0], [0, 0, 0]],
-            "neuron_outputs": [0, 0],
+            "inputs": [[0, 0, 0], [0, 0, 0]], # no needed
+            "neuron_outputs": [0, 0], # no needed
             "synapses_process_id": 123
         }
 
@@ -35,13 +35,13 @@ class neuron_ops_test_cases(unittest.TestCase):
                         "input_names": ["i0", "i1"],
                         "inputs": [2, 3],
                         "input_idx": [0, 1],
-                        "layer_id": 0
+                        "layer_id": 1
                       }
         input_msg_2 = { # or output_msg from previous layer
                         "input_names": ["i2"],
                         "inputs": [3],
                         "input_idx": [2],
-                        "layer_id": 0
+                        "layer_id": 1
                       }
 
         #Primer entrada de input

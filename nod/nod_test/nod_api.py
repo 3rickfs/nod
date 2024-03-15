@@ -20,16 +20,21 @@ def get_nodo_mem_adr(synapses_process_id):
 @app.route("/")
 def hello_world():
     return "<p>Hello, World! I'm a virtual NOD (Neuro Orchestrated Device)"+ \
-           " running in EKS cluster in AWS as a pod. So I'm ready for running"+ \
+           " running in an AWS EKS cluster as a pod. I'm now ready for running"+ \
            " multiple neurons. Nice to meet you.</p>"
 
 @app.route("/save_neurons", methods=['POST'])
 def save_neurons():
     global nodo
     nod_data = request.get_json()
-    nod_data = nod_data.replace("\'", "\"")
-    nod_data = json.loads(nod_data)
-    print(f"nod_data: {nod_data}")
+    #TODO: review this type of handling coming strings
+    #print(nod_data)
+    #nod_data = nod_data.replace("\'", "\"")
+    #print(nod_data)
+    #print("------------------------------------")
+    #print(type(nod_data))
+    #nod_data = json.loads(nod_data)
+    #print(f"nod_data: {nod_data}")
 
     try:
         nodo = nod()
@@ -51,7 +56,8 @@ def save_neurons():
     except Exception as e:
         print(f"Error during getting nod parameters: {e}")
         result = {"result": f"error during getting nod params: {e}"}
-
+    
+    print("FINISHHED")
     return json.dumps(result)
 
 @app.route("/set_nod_inputs", methods=['POST'])
@@ -63,7 +69,8 @@ def set_inputs():
         nodo = ctypes.cast(int(input_data["nodo_mem_adr"]), ctypes.py_object).value
         if nodo.set_inputs(input_data["inputs"],
                            input_data["input_names"],
-                           input_data["input_idx"]
+                           input_data["input_idx"],
+                           input_data["layer_id"]
                           ):
             result = {"result": "nod inputs transferred"}
             outputs = 123
@@ -92,8 +99,8 @@ def get_neuron_outputs():
 @app.route("/send_nod_inputs", methods=['POST'])
 def send_nod_inputs():
     input_data = request.get_json()
-    print(f"input data type: {type(input_data)}")
-    print(f"input data: {input_data}")
+    #print(f"input data type: {type(input_data)}")
+    #print(f"input data: {input_data}")
     #input_data = input_data.replace("\'", "\"")
     #input_data = json.loads(input_data)
 
@@ -104,7 +111,8 @@ def send_nod_inputs():
         #nodo.set_nod_destinations(input_data["nodo_mem_adr_dstn"])
         if nodo.set_inputs(input_data["inputs"],
                            input_data["input_names"],
-                           input_data["input_idx"]
+                           input_data["input_idx"],
+                           input_data["layer_id"]
                           ):
             result = {"result": "nod inputs transferred"}
             outputs = 123

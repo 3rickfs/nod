@@ -43,6 +43,7 @@ class nod():
         self.synapses_processes = dict()
         self.so2eps = []
         self.flid = 0
+        self.finns = []
 
         #self.instrucciones = self.get_format_instr(instrucciones) 
         #self.procesadores = self.get_format_proc(procesadores)
@@ -79,9 +80,11 @@ class nod():
             self.fas = nod_data["fas"]
             self.output_names = nod_data["output_names"]
             self.output_eps = nod_data["output_eps"]
+            self.finns = nod_data["finns"]
             #self.neuron_num = len(self.output_names)
             #len(self.input_names)
             self.input_num = nod_data["input_num"] #[len(w[0]) for w in self.pesos]
+            print(f"input num: {self.input_num}")
             #self.inputs = [0 for i in range(self.input_num[0])] #first layer
             self.inputs = []
             self.input_num_count = []
@@ -89,6 +92,9 @@ class nod():
                 zeros = [0 for i in range(l)]
                 self.inputs.append(zeros.copy())
                 self.input_num_count.append(zeros.copy())
+            print(f"input num count: {self.input_num_count}")
+            for i in range(len(self.input_num_count)):
+                print(f"input num count len: {len(self.input_num_count[i])}")
             #print(f"set up inputs: {self.inputs}")
             #self.neuron_outputs = [0 for i in range(len(self.pesos))]
             #self.nod_memory_address = nod_data["nod_memory_address"]
@@ -137,6 +143,7 @@ class nod():
                     biases = self.biases[indx],
                     fas = self.fas[indx],
                     #input_names = self.input_names, #from first layer
+                    layer_id = self.capa_ids[indx],
                     output_names = self.output_names[indx],
                     #output_ip = self.output_ip,
                     #output_port = self.output_port
@@ -153,15 +160,29 @@ class nod():
                     else:
                         #frm = int(self.output_names[indx-1][0][1:])
                         #to = len(self.output_names[indx])
-                        i1 = self.output_names[indx-1][0][1:]
-                        i2 = self.input_names[indx][0][1:]
-                        frm = i1 - i2
-                        i1 = self.output_names[indx-1][-1][1:]
-                        to = i1 - i2 + 1
+                        print("ENTRAMOS AQUII")
+                        #i1 = int(self.output_names[indx-1][0][1:])
+                        #i2 = int(self.input_names[indx][0][1:])
+                        #print(f"i1: {i1}, i2: {i2}")
+                        #previous layer's output names is the input of the next
+                        #being part of neurons only processed by current nod
+                        i1 = int(self.output_names[indx-1][0][1:])
+                        frm =  i1 - self.finns[indx]
+                        print("KAKAKAKAKAKAK")
+                        i2 = int(self.output_names[indx-1][-1][1:])
+                        print(f"i1: {i1}, i2: {i2}")
+                        to = i2 - self.finns[indx] + 1
+                        print(f"from: {frm}, to: {to}")
+                        print(f"index: {indx}")
+                        print(f"inputs len: {len(self.inputs[indx])}")
+                        print(f"input num count len: {len(self.input_num_count[indx])}")
                         self.inputs[indx][frm:to] = result["o"]
                         ones = [1 for i in result["o"]]
                         self.input_num_count[indx][frm:to] = ones
-                        break
+                        print(f"printing inputs: {self.inputs[indx]}")
+                        #Make sure the inputs are complete if so run the next layer
+                        if 0 in self.input_num_count[indx]:
+                            break
                 else:
                     break
 
@@ -186,18 +207,23 @@ class nod():
 
     def set_inputs(self, inputs, entrante_input_names, input_idx, layer_id):
         indx = layer_id - self.flid
+        print(f"IIIIINNNNDEEXX: {indx}")
         if self.verify_input(entrante_input_names, indx):
-            #print("Inputs accepted")
-            #print(f"coming inputs: {inputs}")
-            #print(f"indx: {indx}")
-            #print(f"inputs: {self.inputs}")
             inpts = self.inputs[indx]
-            #print(f"layer id: {layer_id}")
-            #print(f"inpts size: {len(inpts)}")
-            #print(f"inputs size: {len(inputs)}")
-            #print(f"input idx size: {len(input_idx)}")
+            iz = len(inputs)
+            print("Inputs accepted")
+            print(f"coming inputs: {inputs}")
+            print(f"indx: {indx}")
+            #print(f"inputs: {self.inputs}")
+            print(f"layer id: {layer_id}")
+            print(f"inpts size: {iz}")
+            print(f"inputs size: {len(inputs)}")
+            print(f"input idx size: {len(input_idx)}")
+            print(f"input idx: {input_idx}")
             #print(f"input names: {self.input_names}")
             #print(f"inputn_names[0][1:]: {int(self.input_names[0][0][1:])}")
+            print(f"input num count: {self.input_num_count[indx]}")
+            print(f"input num count len: {len(self.input_num_count[indx])}")
             for j, idx in enumerate(input_idx):
                 #print(f"idx: {idx}")
                 #print(f"j: {j}")
@@ -206,10 +232,13 @@ class nod():
                 #print(f"i: {i}")
                 #print(f"selected input: {inputs[j]}")
                 inpts[i] = inputs[j]
-                self.input_num_count[indx][i] = 1
-            #print(f"inpts: {inpts}")
+                ii = input_idx[0] - self.finns[indx] + 1 + j
+                print(ii)
+                print(f"finns: {self.finns[indx]}")
+                self.input_num_count[indx][ii] = 1
+            print(f"inpts: {inpts}")
             self.inputs[indx] = inpts
-            #print(f"input num count: {self.input_num_count[indx]}")
+            print(f"input num count: {self.input_num_count[indx]}")
 
             #if self.input_num[indx] == self.input_num_count[indx]:
             #for l in : #for all layers

@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.1.1] 2024-03-20
+### Add
+- Distribution done and running ok when testing with NOA to run diabetes and nist_fcl models
 
 ## [1.1.0] 2024-01-08
 ### Add

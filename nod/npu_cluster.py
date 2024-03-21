@@ -136,6 +136,18 @@ class create_output_msgs(neuron_ops):
 
         return kwargs
 
+class round_outputs(neuron_ops):
+    """ Round outputs to shorten the text sent to other nods
+    """
+
+    def run_operation(**kwargs):
+        print("Rounding the oputputs")
+        for o in range(len(kwargs["o"])):
+            kwargs["o"][o] = round(kwargs["o"][o], 2)
+            #print(kwargs["o"][o])
+
+        return kwargs
+
 class execute_synapse(neuron_ops):
     """ send inputs to next nod
     """
@@ -144,7 +156,8 @@ class execute_synapse(neuron_ops):
         if kwargs["send_output_2_eps"]:
             print("Start synapse, sending inputs to next nod")
 
-            print(kwargs["output_names"])
+            #print(kwargs["output_names"])
+            # TODO: optimize the amount of data to send to reduce prediction time
             nod_input = {
                 "input_names": kwargs["output_names"],
                 "inputs": kwargs["o"],

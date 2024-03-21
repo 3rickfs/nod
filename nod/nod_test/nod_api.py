@@ -57,7 +57,7 @@ def save_neurons():
         print(f"Error during getting nod parameters: {e}")
         result = {"result": f"error during getting nod params: {e}"}
     
-    print("FINISHHED")
+    #print("FINISHHED")
     return json.dumps(result)
 
 @app.route("/set_nod_inputs", methods=['POST'])

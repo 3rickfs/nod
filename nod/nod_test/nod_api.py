@@ -110,7 +110,6 @@ def send_nod_inputs():
         nodo.set_synapses_process_id(input_data["synapses_process_id"])
         #nodo.set_nod_destinations(input_data["nodo_mem_adr_dstn"])
         if nodo.set_inputs(input_data["inputs"],
-                           input_data["input_names"],
                            input_data["input_idx"],
                            input_data["layer_id"]
                           ):

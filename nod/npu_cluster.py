@@ -159,10 +159,8 @@ class execute_synapse(neuron_ops):
             #print(kwargs["output_names"])
             # TODO: optimize the amount of data to send to reduce prediction time
             nod_input = {
-                "input_names": kwargs["output_names"],
                 "inputs": kwargs["o"],
-                #"input_idx": [i for i in range(len(kwargs["o"]))],
-                "input_idx": [int(n[1:]) - 1 for n in kwargs["output_names"]],
+                "input_idx": int(kwargs["output_names"][0][1:]) - 1,
                 "layer_id" : kwargs["layer_id"] + 1, #to the next layer
                 "synapses_process_id": kwargs["synapses_process_id"]
             }
@@ -190,9 +188,4 @@ class NPUClusterOps:
             kwargs = operation.run_operation(**kwargs)
 
         return kwargs
-
-
-
-
-
 

@@ -1,3 +1,4 @@
+import os
 import json
 import ctypes
 
@@ -8,6 +9,46 @@ from nod.nod import nod
 app = Flask(__name__)
 nodo = None
 outputs = []
+home = os.environ.get('HOME')
+if 'dev-1' in home:
+    app.config['UPLOAD_FOLDER'] = '/home/dev-1/dev/edge-intelligence-simulator/nod/uploads'
+else:
+    #TODO: double check the uploads folder on deployment
+    app.config['UPLOAD_FOLDER'] = '/home/nod/nod/uploads'
+
+load_nod_sp()
+
+def load_nod_sp():
+    res = {}
+    fp = os.listdir(app.config['UPLOAD_FOLDER'])
+    files = [f for f in fp if os.path.isfile(f)]
+
+    for f in files:
+        with open(fp + f, "r") as jf:
+            nod_data = json.load(jf)
+        jf.close()
+
+        nodo = nod()
+        nodo_mem_adr = nodo.set_nodo_mem_adr(id(nodo),
+                                             nod_data["synapses_process_id"]
+                                            )
+        r = nodo.read_parameters(nod_data)
+
+    return res
+
+def get_nod_sp(input_data):
+    with open("synapses_processes.json", "r")  as jf:
+        sps = json.load(jf)
+    jf.close()
+
+    sp = sps[str(input_data["synapses_process_id"])]
+    dr = input_data["detailed_res"]
+    if dr:
+        res = sp
+    else:
+        res = sp["nod_id"]
+
+    return res
 
 def get_nodo_mem_adr(synapses_process_id):
     with open("synapses_processes.json", "r") as jsonfile:
@@ -110,7 +151,6 @@ def send_nod_inputs():
         nodo.set_synapses_process_id(input_data["synapses_process_id"])
         #nodo.set_nod_destinations(input_data["nodo_mem_adr_dstn"])
         if nodo.set_inputs(input_data["inputs"],
-                           input_data["input_names"],
                            input_data["input_idx"],
                            input_data["layer_id"]
                           ):
@@ -124,6 +164,19 @@ def send_nod_inputs():
 
     return json.dumps(result)
 
+@app.route("/get_sp_nod_info", methods=['POST'])
+def get_sp_nod_info():
+    input_data = request.get_json()
+
+    try:
+        res = get_nod_sp(input_data)
+        result = {"result": res}
+
+    except Exception as e:
+        print(f"Error getting the sp nod info: {e}")
+        result = {"result": f"Error getting the sp nod info: {e}")
+
+    return json.dumps(result)
 
 if __name__ == '__main__':
     host = os.getenv('FLASK_HOST', '0.0.0.0')

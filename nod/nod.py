@@ -49,6 +49,17 @@ class nod():
         #self.instrucciones = self.get_format_instr(instrucciones) 
         #self.procesadores = self.get_format_proc(procesadores)
 
+    #TODO: write delete specific sp nod data
+    #def delete_sp_nod_data()
+
+    def save_sp_nod_data(self, sps_folder_path, nod_data):
+        print("Saving synaptic process nod data")
+        spfn = nod_data["synapses_process_id"] + "-" + str(nod_data["mfname"])
+        with open(sps_folder_path + "/" + spfn, "w") as jf:
+            json.dump(nod_data, jf)
+        jf.close()
+
+
     def set_nodo_mem_adr(self, nodo_ma, synapses_process_id):
         print("Saving object memory address into a dictionary")
         print(f"synpasys process id: {str(synapses_process_id)}")
@@ -74,12 +85,19 @@ class nod():
         print("Reading nod parameters")
         try:
             self.nod_id = nod_data["nod_id"]
+
             self.capa_ids = nod_data["capa_ids"]
-            self.input_names = nod_data["input_names"]
-            self.pesos = nod_data["pesos"]
-            self.biases = nod_data["biases"]
-            self.fas = nod_data["fas"]
-            self.output_names = nod_data["output_names"]
+            sn = int(nod_data["i"][0][0][1:])
+            en = int(nod_data["i"][1][0][1:])
+            fl = nod_data["i"][0][0] #first letter
+            self.input_names = [fl + str(i) for i in range(sn, en + 1)]
+            self.pesos = nod_data["p"]
+            self.biases = nod_data["b"]
+            self.fas = nod_data["f"]
+            sn = int(nod_data["o"][0][0][1:])
+            en = int(nod_data["o"][1][0][1:])
+            fl = nod_data["o"][0][0] #first letter
+            self.output_names = [fl + str(i) for i in range(sn, en + 1)] #nod_data["o"]
             self.output_eps = nod_data["output_eps"]
             self.finns = nod_data["finns"]
             #self.neuron_num = len(self.output_names)
@@ -208,56 +226,55 @@ class nod():
                 return False
         return res
 
-    def set_inputs(self, inputs, entrante_input_names, input_idx, layer_id):
+    def set_inputs(self, inputs, input_idx, layer_id):
         indx = layer_id - self.flid
         if self.verbose: print(f"IIIIINNNNDEEXX: {indx}")
-        if self.verify_input(entrante_input_names, indx):
-            inpts = self.inputs[indx]
-            iz = len(inputs)
+        #if self.verify_input(indx):
+        inpts = self.inputs[indx]
+        iz = len(inputs)
+        if self.verbose:
+            print("Inputs accepted")
+            print(f"coming inputs: {inputs}")
+            print(f"indx: {indx}")
+            #print(f"inputs: {self.inputs}")
+            print(f"layer id: {layer_id}")
+            print(f"inpts size: {iz}")
+            print(f"inputs size: {len(inputs)}")
+            print(f"input idx: {input_idx}")
+            #print(f"input names: {self.input_names}")
+            #print(f"inputn_names[0][1:]: {int(self.input_names[0][0][1:])}")
+            print(f"input num count: {self.input_num_count[indx]}")
+            print(f"input num count len: {len(self.input_num_count[indx])}")
+        for j in range(len(inputs)):
+                #print(f"idx: {idx}")
+                #print(f"j: {j}")
+                #inpts[idx] = inputs[j]
+            i = input_idx + j - int(self.input_names[indx][0][1:]) + 1
+            #print(f"i: {i}")
+            #print(f"selected input: {inputs[j]}")
+            inpts[i] = inputs[j]
+            ii = input_idx - self.finns[indx] + 1 + j
             if self.verbose:
-                print("Inputs accepted")
-                print(f"coming inputs: {inputs}")
-                print(f"indx: {indx}")
-                #print(f"inputs: {self.inputs}")
-                print(f"layer id: {layer_id}")
-                print(f"inpts size: {iz}")
-                print(f"inputs size: {len(inputs)}")
-                print(f"input idx size: {len(input_idx)}")
-                print(f"input idx: {input_idx}")
-                #print(f"input names: {self.input_names}")
-                #print(f"inputn_names[0][1:]: {int(self.input_names[0][0][1:])}")
-                print(f"input num count: {self.input_num_count[indx]}")
-                print(f"input num count len: {len(self.input_num_count[indx])}")
-            for j, idx in enumerate(input_idx):
-                    #print(f"idx: {idx}")
-                    #print(f"j: {j}")
-                    #inpts[idx] = inputs[j]
-                i = int(idx) - int(self.input_names[indx][0][1:]) + 1
-                #print(f"i: {i}")
-                #print(f"selected input: {inputs[j]}")
-                inpts[i] = inputs[j]
-                ii = input_idx[0] - self.finns[indx] + 1 + j
-                if self.verbose:
-                    print(ii)
-                    print(f"finns: {self.finns[indx]}")
-                self.input_num_count[indx][ii] = 1
-            self.inputs[indx] = inpts
-            if self.verbose:
-                print(f"inpts: {inpts}")
-                print(f"input num count: {self.input_num_count[indx]}")
+                print(ii)
+                print(f"finns: {self.finns[indx]}")
+            self.input_num_count[indx][ii] = 1
+        self.inputs[indx] = inpts
+        if self.verbose:
+            print(f"inpts: {inpts}")
+            print(f"input num count: {self.input_num_count[indx]}")
 
-            #if self.input_num[indx] == self.input_num_count[indx]:
-            #for l in : #for all layers
-            if not 0 in self.input_num_count[indx]:
-                #print(f"Ready for running the models with following inpunts: {self.inputs}")
-                self.status = "ready" #TODO: integrate nod's status management
-                zeros = [0 for i in range(self.input_num[layer_id])]
-                self.input_num_count[indx] = zeros
-                #Running neurons inmediately after setting inputs
-                r = self.run_neuron_ops(indx)
-            return True
-        else:
-            print("Inputs rejected")
-            return False
+        #if self.input_num[indx] == self.input_num_count[indx]:
+        #for l in : #for all layers
+        if not 0 in self.input_num_count[indx]:
+            #print(f"Ready for running the models with following inpunts: {self.inputs}")
+            self.status = "ready" #TODO: integrate nod's status management
+            zeros = [0 for i in range(self.input_num[layer_id])]
+            self.input_num_count[indx] = zeros
+            #Running neurons inmediately after setting inputs
+            r = self.run_neuron_ops(indx)
+        return True
+        #else:
+        #    print("Inputs rejected")
+        #    return False
 
 

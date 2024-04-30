@@ -18,6 +18,23 @@ else:
 
 load_nod_sp()
 
+def delete_sp_nod_data(nodo, spid):
+    #Delete json file
+    p = app.config['UPLOAD_FOLDER']
+    os.remove(p + "/" + nodo.spfn)
+
+    #Delete registers
+    p = app.config['UPLOAD_FOLDER']
+    with open(p + "/synapses_processes.json", "r") as jf:
+        sps = json.load(jf)
+    jf.close()
+    del nodo_obj_adr, sps[str(spid)]
+
+    #Overwriting register
+    with open(p + "/synapses_processes.json", "w") as jf:
+        json.dump(sps, jf)
+    jf.close()
+
 def load_nod_sp():
     res = {}
     fp = os.listdir(app.config['UPLOAD_FOLDER'])
@@ -174,9 +191,25 @@ def get_sp_nod_info():
 
     except Exception as e:
         print(f"Error getting the sp nod info: {e}")
-        result = {"result": f"Error getting the sp nod info: {e}")
+        result = {"result": f"Error getting the sp nod info: {e}"}
 
     return json.dumps(result)
+
+@app.route("/remove_sp_nod_info", methods=['POST'])
+def remove_sp_nod_info():
+    input_data = request.get_json()
+
+    nodo_mem_adr = get_nodo_mem_adr(input_data["synapses_process_id"])
+    nodo = ctypes.cast(int(nodo_mem_adr), ctypes.py_object).value
+
+    try:
+        delete_sp_nod_data(nodo, input_data["synapses_process_id"])
+        res = {"result": "ok"}
+    except Exception as e:
+        print(f"Error removing sp nod info: {e}")
+        res = {"result": "error"}
+
+    return res
 
 if __name__ == '__main__':
     host = os.getenv('FLASK_HOST', '0.0.0.0')

@@ -45,16 +45,15 @@ class nod():
         self.flid = 0
         self.finns = []
         self.verbose = False
+        self.spfn = ""
 
         #self.instrucciones = self.get_format_instr(instrucciones) 
         #self.procesadores = self.get_format_proc(procesadores)
 
-    #TODO: write delete specific sp nod data
-    #def delete_sp_nod_data()
-
     def save_sp_nod_data(self, sps_folder_path, nod_data):
         print("Saving synaptic process nod data")
         spfn = nod_data["synapses_process_id"] + "-" + str(nod_data["mfname"])
+        self.spfn = spfn
         with open(sps_folder_path + "/" + spfn, "w") as jf:
             json.dump(nod_data, jf)
         jf.close()

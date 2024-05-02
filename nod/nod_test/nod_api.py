@@ -1,3 +1,4 @@
+import os
 import json
 import ctypes
 
@@ -8,6 +9,63 @@ from nod.nod import nod
 app = Flask(__name__)
 nodo = None
 outputs = []
+#home = os.environ.get('HOME')
+#if 'dev-1' in home:
+    #app.config['UPLOAD_FOLDER'] = '/home/dev-1/dev/edge-intelligence-simulator/nod/nod/uploads'
+#else:
+#    app.config['UPLOAD_FOLDER'] = '/home/nod/nod/uploads'
+
+app.config['UPLOAD_FOLDER'] = os.getcwd() + "/uploads"
+
+try:
+    fp = os.listdir(app.config['UPLOAD_FOLDER'])
+    files = [f + "/sps/" for f in fp if os.path.isfile(f)]
+
+    for f in files:
+        with open(fp + f, "r") as jf:
+            nod_data = json.load(jf)
+        jf.close()
+
+        nodo = nod()
+        nodo_mem_adr = nodo.set_nodo_mem_adr(id(nodo),
+                                             nod_data["synapses_process_id"]
+                                            )
+        r = nodo.read_parameters(nod_data)
+        #get memory available
+        del nodo
+except Exception as e:
+    raise Exception(f"Error loading saved synaptic processes: {e}")
+
+def delete_sp_nod_data(nodo, spid):
+    #Delete json file
+    p = app.config['UPLOAD_FOLDER']
+    os.remove(p + "/sps/" + nodo.spfn)
+
+    #Delete registers
+    p = app.config['UPLOAD_FOLDER']
+    with open(p + "/synapses_processes.json", "r") as jf:
+        sps = json.load(jf)
+    jf.close()
+    del nodo_obj_adr, sps[str(spid)]
+
+    #Overwriting register
+    with open(p + "/synapses_processes.json", "w") as jf:
+        json.dump(sps, jf)
+    jf.close()
+
+def get_nod_sp(input_data):
+    with open("synapses_processes.json", "r")  as jf:
+        sps = json.load(jf)
+    jf.close()
+
+    sp = sps[str(input_data["synapses_process_id"])]
+    dr = input_data["detailed_res"]
+    if dr:
+        res = sp
+    else:
+        res = sp["nod_id"]
+
+    return res
 
 def get_nodo_mem_adr(synapses_process_id):
     with open("synapses_processes.json", "r") as jsonfile:
@@ -41,13 +99,22 @@ def save_neurons():
         #print(f"nod_data: {nod_data['synapses_process_id']}")
         #nodo_mem_adr = nodo.set_synapses_process_id(id(nodo))
         nodo_mem_adr = nodo.set_nodo_mem_adr(id(nodo),
-                                             nod_data["synapses_process_id"]
+                                             nod_data["synapses_process_id"],
+                                             app.config["UPLOAD_FOLDER"]
                                             )
         #print("lalalal 1")
         #nod_data["nod_memory_address"] = nodo_mem_adr
         if nodo.read_parameters(nod_data):
-            if not nodo.save_parameters(nod_data):
-                raise Exception("Error saving parameters")
+            #if not nodo.save_parameters(nod_data):
+            #    raise Exception("Error saving parameters")
+            #else:
+            # save the synaptic process in local persisten memory
+            r = nodo.save_sp_nod_data(
+                   app.config["UPLOAD_FOLDER"] + "/sps",
+                   nod_data
+                )
+            if r != "ok":
+                raise Exception(f"Error saving parameters: {e}")
         else:
             raise Exception("Error reading parameters")
         result = {"result": "neurons installed",
@@ -123,6 +190,36 @@ def send_nod_inputs():
 
     return json.dumps(result)
 
+@app.route("/get_sp_nod_info", methods=['POST'])
+def get_sp_nod_info():
+    input_data = request.get_json()
+
+    try:
+        res = get_nod_sp(input_data)
+        result = {"result": res}
+
+    except Exception as e:
+        print(f"Error getting the sp nod info: {e}")
+        result = {"result": f"Error getting the sp nod info: {e}"}
+
+    return json.dumps(result)
+
+@app.route("/remove_sp_nod_info", methods=['POST'])
+def remove_sp_nod_info():
+    input_data = request.get_json()
+
+    nodo_mem_adr = get_nodo_mem_adr(input_data["synapses_process_id"])
+    nodo = ctypes.cast(int(nodo_mem_adr), ctypes.py_object).value
+
+    try:
+        delete_sp_nod_data(nodo, input_data["synapses_process_id"])
+        del nodo
+        res = {"result": "ok"}
+    except Exception as e:
+        print(f"Error removing sp nod info: {e}")
+        res = {"result": "error"}
+
+    return res
 
 if __name__ == '__main__':
     host = os.getenv('FLASK_HOST', '0.0.0.0')

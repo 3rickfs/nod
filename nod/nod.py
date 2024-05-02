@@ -52,20 +52,24 @@ class nod():
 
     def save_sp_nod_data(self, sps_folder_path, nod_data):
         print("Saving synaptic process nod data")
-        spfn = nod_data["synapses_process_id"] + "-" + str(nod_data["mfname"])
-        self.spfn = spfn
-        with open(sps_folder_path + "/" + spfn, "w") as jf:
-            json.dump(nod_data, jf)
-        jf.close()
+        try:
+            spfn = str(nod_data["synapses_process_id"]) + "-" + str(nod_data["mfname"])
+            self.spfn = spfn
+            with open(sps_folder_path + "/" + spfn, "w") as jf:
+                json.dump(nod_data, jf)
+            jf.close()
+        except Exception as e:
+            return e 
 
+        return "ok"
 
-    def set_nodo_mem_adr(self, nodo_ma, synapses_process_id):
+    def set_nodo_mem_adr(self, nodo_ma, synapses_process_id, sp_fpath):
         print("Saving object memory address into a dictionary")
         print(f"synpasys process id: {str(synapses_process_id)}")
         self.synapses_processes[str(synapses_process_id)] = nodo_ma
         print(f"nodo ma: {nodo_ma}")
         self.synapses_process_id = synapses_process_id
-        with open("synapses_processes.json", "w") as jsonfile:
+        with open(sp_fpath + "/synapses_processes.json", "w") as jsonfile:
             #json.dump(json.dumps(str(self.synapses_processes)), jsonfile)
             json.dump(self.synapses_processes, jsonfile)
         jsonfile.close()

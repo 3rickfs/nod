@@ -9,19 +9,37 @@ from nod.nod import nod
 app = Flask(__name__)
 nodo = None
 outputs = []
-home = os.environ.get('HOME')
-if 'dev-1' in home:
-    app.config['UPLOAD_FOLDER'] = '/home/dev-1/dev/edge-intelligence-simulator/nod/uploads'
-else:
-    #TODO: double check the uploads folder on deployment
-    app.config['UPLOAD_FOLDER'] = '/home/nod/nod/uploads'
+#home = os.environ.get('HOME')
+#if 'dev-1' in home:
+    #app.config['UPLOAD_FOLDER'] = '/home/dev-1/dev/edge-intelligence-simulator/nod/nod/uploads'
+#else:
+#    app.config['UPLOAD_FOLDER'] = '/home/nod/nod/uploads'
 
-load_nod_sp()
+app.config['UPLOAD_FOLDER'] = os.getcwd() + "/uploads"
+#TODO: Turn this into a function to just load required synaptic processes
+try:
+    fp = os.listdir(app.config['UPLOAD_FOLDER'])
+    files = [f + "/sps/" for f in fp if os.path.isfile(f)]
+
+    for f in files:
+        with open(fp + f, "r") as jf:
+            nod_data = json.load(jf)
+        jf.close()
+
+        nodo = nod()
+        nodo_mem_adr = nodo.set_nodo_mem_adr(id(nodo),
+                                             nod_data["synapses_process_id"]
+                                            )
+        r = nodo.read_parameters(nod_data)
+        #get memory available
+        del nodo
+except Exception as e:
+    raise Exception(f"Error loading saved synaptic processes: {e}")
 
 def delete_sp_nod_data(nodo, spid):
     #Delete json file
     p = app.config['UPLOAD_FOLDER']
-    os.remove(p + "/" + nodo.spfn)
+    os.remove(p + "/sps/" + nodo.spfn)
 
     #Delete registers
     p = app.config['UPLOAD_FOLDER']
@@ -34,24 +52,6 @@ def delete_sp_nod_data(nodo, spid):
     with open(p + "/synapses_processes.json", "w") as jf:
         json.dump(sps, jf)
     jf.close()
-
-def load_nod_sp():
-    res = {}
-    fp = os.listdir(app.config['UPLOAD_FOLDER'])
-    files = [f for f in fp if os.path.isfile(f)]
-
-    for f in files:
-        with open(fp + f, "r") as jf:
-            nod_data = json.load(jf)
-        jf.close()
-
-        nodo = nod()
-        nodo_mem_adr = nodo.set_nodo_mem_adr(id(nodo),
-                                             nod_data["synapses_process_id"]
-                                            )
-        r = nodo.read_parameters(nod_data)
-
-    return res
 
 def get_nod_sp(input_data):
     with open("synapses_processes.json", "r")  as jf:
@@ -99,13 +99,22 @@ def save_neurons():
         #print(f"nod_data: {nod_data['synapses_process_id']}")
         #nodo_mem_adr = nodo.set_synapses_process_id(id(nodo))
         nodo_mem_adr = nodo.set_nodo_mem_adr(id(nodo),
-                                             nod_data["synapses_process_id"]
+                                             nod_data["synapses_process_id"],
+                                             app.config["UPLOAD_FOLDER"]
                                             )
         #print("lalalal 1")
         #nod_data["nod_memory_address"] = nodo_mem_adr
         if nodo.read_parameters(nod_data):
-            if not nodo.save_parameters(nod_data):
-                raise Exception("Error saving parameters")
+            #if not nodo.save_parameters(nod_data):
+            #    raise Exception("Error saving parameters")
+            #else:
+            # save the synaptic process in local persisten memory
+            r = nodo.save_sp_nod_data(
+                   app.config["UPLOAD_FOLDER"] + "/sps",
+                   nod_data
+                )
+            if r != "ok":
+                raise Exception(f"Error saving parameters: {e}")
         else:
             raise Exception("Error reading parameters")
         result = {"result": "neurons installed",
@@ -204,6 +213,7 @@ def remove_sp_nod_info():
 
     try:
         delete_sp_nod_data(nodo, input_data["synapses_process_id"])
+        del nodo
         res = {"result": "ok"}
     except Exception as e:
         print(f"Error removing sp nod info: {e}")

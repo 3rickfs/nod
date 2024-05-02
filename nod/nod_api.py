@@ -17,26 +17,46 @@ outputs = []
 
 app.config['UPLOAD_FOLDER'] = os.getcwd() + "/uploads"
 #TODO: Turn this into a function to just load required synaptic processes
-try:
+def load_all_sp_nod_objs():
+    try:
+        fp = os.listdir(app.config['UPLOAD_FOLDER'])
+        files = [f + "/sps/" for f in fp if os.path.isfile(f)]
+
+        for f in files:
+            with open(fp + f, "r") as jf:
+                nod_data = json.load(jf)
+            jf.close()
+
+            nodo = nod()
+            nodo_mem_adr = nodo.set_nodo_mem_adr(id(nodo),
+                                                 nod_data["synapses_process_id"]
+                                                )
+            r = nodo.read_parameters(nod_data)
+            #get memory available
+            #del nodo
+    except Exception as e:
+        raise Exception(f"Error loading saved synaptic processes: {e}")
+
+def load_especific_nod_sp(spid):
     fp = os.listdir(app.config['UPLOAD_FOLDER'])
-    files = [f + "/sps/" for f in fp if os.path.isfile(f)]
-
+    files = [f for f in fp if os.path.isfile(f)]
+    nodo_mem_adr = 0
     for f in files:
-        with open(fp + f, "r") as jf:
-            nod_data = json.load(jf)
-        jf.close()
+        if str(spid) == f.split("-")[0]:
+            with open(fp + "/sps/" + f,"r") as jf:
+                nod_data = json.load(jf)
+            jf.close()
 
-        nodo = nod()
-        nodo_mem_adr = nodo.set_nodo_mem_adr(id(nodo),
-                                             nod_data["synapses_process_id"]
-                                            )
-        r = nodo.read_parameters(nod_data)
-        #get memory available
-        del nodo
-except Exception as e:
-    raise Exception(f"Error loading saved synaptic processes: {e}")
+            nodo = nod()
+            nodo_mem_adr = nodo.set_nodo_mem_adr(id(nodo),
+                                                 spid
+                                                )
+            r = nodo.read_parameters(nod_data)
 
-def delete_sp_nod_data(nodo, spid):
+    return nodo_mem_adr
+
+
+def delete_sp_nod_obj(nodo, spid):
     #Delete json file
     p = app.config['UPLOAD_FOLDER']
     os.remove(p + "/sps/" + nodo.spfn)
@@ -71,9 +91,16 @@ def get_nodo_mem_adr(synapses_process_id):
     with open("synapses_processes.json", "r") as jsonfile:
         sp = json.load(jsonfile)
     jsonfile.close()
-    print(f"NOD: the nodo mem adr is: {sp[str(synapses_process_id)]}")
+    try:
+        ma = sp[str(synapses_process_id)]
+        print(f"NOD: the nodo mem adr is: {sp[str(synapses_process_id)]}")
+    except Exception as e:
+        print(f"No synaptic process found in RAM: {e}")
+        print("Sarching on disk")
+        ma = load_especific_nod_sp(synapses_process_id)
+        if ma == 0: print("No memory adr detected for underlying synaptic processes")
 
-    return sp[str(synapses_process_id)]
+    return ma
 
 @app.route("/")
 def hello_world():
@@ -173,6 +200,8 @@ def send_nod_inputs():
 
     try:
         nodo_mem_adr = get_nodo_mem_adr(input_data["synapses_process_id"])
+        id nodo_mem_adr == 0:
+            raise Exception("Synaptic process id not found")
         nodo = ctypes.cast(int(nodo_mem_adr), ctypes.py_object).value
         nodo.set_synapses_process_id(input_data["synapses_process_id"])
         #nodo.set_nod_destinations(input_data["nodo_mem_adr_dstn"])
@@ -212,7 +241,7 @@ def remove_sp_nod_info():
     nodo = ctypes.cast(int(nodo_mem_adr), ctypes.py_object).value
 
     try:
-        delete_sp_nod_data(nodo, input_data["synapses_process_id"])
+        delete_sp_nod_obj(nodo, input_data["synapses_process_id"])
         del nodo
         res = {"result": "ok"}
     except Exception as e:

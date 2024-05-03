@@ -16,11 +16,10 @@ outputs = []
 #    app.config['UPLOAD_FOLDER'] = '/home/nod/nod/uploads'
 
 app.config['UPLOAD_FOLDER'] = os.getcwd() + "/uploads"
-#TODO: Turn this into a function to just load required synaptic processes
 def load_all_sp_nod_objs():
     try:
         fp = os.listdir(app.config['UPLOAD_FOLDER'])
-        files = [f + "/sps/" for f in fp if os.path.isfile(f)]
+        files = ["/sps/" + f for f in fp if os.path.isfile(f)]
 
         for f in files:
             with open(fp + f, "r") as jf:

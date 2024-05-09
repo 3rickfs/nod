@@ -44,7 +44,7 @@ class nod():
         self.so2eps = []
         self.flid = 0
         self.finns = []
-        self.verbose = False
+        self.verbose = True
         self.spfn = ""
 
         #self.instrucciones = self.get_format_instr(instrucciones) 
@@ -88,19 +88,33 @@ class nod():
         print("Reading nod parameters")
         try:
             self.nod_id = nod_data["nod_id"]
-
             self.capa_ids = nod_data["capa_ids"]
-            sn = int(nod_data["i"][0][0][1:])
-            en = int(nod_data["i"][1][0][1:])
-            fl = nod_data["i"][0][0] #first letter
-            self.input_names = [fl + str(i) for i in range(sn, en + 1)]
+
+            print(f"inputs: {nod_data['i']}")
+            #sn = int(nod_data["i"][0][0][1:])
+            #en = int(nod_data["i"][1][0][1:])
+            #fl = nod_data["i"][0][0] #first letter
+            #self.input_names = [fl + str(i) for i in range(sn, en + 1)]
+            self.input_names = []
+            for l in range(len(nod_data['i'])):
+                nod_data['i'][l]
+                sn = int(nod_data["i"][l][0][1:])
+                en = int(nod_data["i"][l][1][1:])
+                fl = nod_data["i"][l][0][0] 
+                self.input_names.append([fl + str(i) for i in range(sn, en + 1)])
+            #print(f"input names: {self.input_names}")
+            #[['x1', 'x31'], ['o1', 'o80'], ['o81', 'o180'], ['o181', 'o300']]
+
             self.pesos = nod_data["p"]
             self.biases = nod_data["b"]
             self.fas = nod_data["f"]
+
+            print(f"outputs: {nod_data['o']}")
             sn = int(nod_data["o"][0][0][1:])
             en = int(nod_data["o"][1][0][1:])
             fl = nod_data["o"][0][0] #first letter
-            self.output_names = [fl + str(i) for i in range(sn, en + 1)] #nod_data["o"]
+            self.output_names = nod_data['o'] #[fl + str(i) for i in range(sn, en + 1)] #nod_data["o"]
+
             self.output_eps = nod_data["output_eps"]
             self.finns = nod_data["finns"]
             #self.neuron_num = len(self.output_names)
@@ -230,6 +244,7 @@ class nod():
         return res
 
     def set_inputs(self, inputs, input_idx, layer_id):
+        print("Setting inputs")
         indx = layer_id - self.flid
         if self.verbose: print(f"IIIIINNNNDEEXX: {indx}")
         #if self.verify_input(indx):
@@ -244,13 +259,13 @@ class nod():
             print(f"inpts size: {iz}")
             print(f"inputs size: {len(inputs)}")
             print(f"input idx: {input_idx}")
-            #print(f"input names: {self.input_names}")
+            print(f"input names: {self.input_names}")
             #print(f"inputn_names[0][1:]: {int(self.input_names[0][0][1:])}")
             print(f"input num count: {self.input_num_count[indx]}")
             print(f"input num count len: {len(self.input_num_count[indx])}")
         for j in range(len(inputs)):
-                #print(f"idx: {idx}")
-                #print(f"j: {j}")
+            print(f"idx: {indx}")
+            print(f"j: {j}")
                 #inpts[idx] = inputs[j]
             i = input_idx + j - int(self.input_names[indx][0][1:]) + 1
             #print(f"i: {i}")

@@ -9,3 +9,5 @@ nod/test/__pycache__/
 aipu/.aipu.py.swm/
 *.swo
 */__pycache__
+nod/uploads/sps/*.json
+nod/nod_test/uploads/sps/*.json

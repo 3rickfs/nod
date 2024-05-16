@@ -4,7 +4,6 @@ import ctypes
 
 from flask import Flask, request
 from nod.nod import nod
-#from synapses import synapses_process
 
 app = Flask(__name__)
 nodo = None

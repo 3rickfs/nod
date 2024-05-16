@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.2.1] 2024-05-15
+### Add
+- Nod able to recover from a hardware reset. The registerd synaptic process can be restored. Until this relese extra files and the ones which came from the begining are going to remain. 
+
 ## [1.1.1] 2024-03-20
 ### Add
 - Distribution done and running ok when testing with NOA to run diabetes and nist_fcl models

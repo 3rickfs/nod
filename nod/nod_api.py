@@ -16,10 +16,23 @@ outputs = []
 
 app.config['UPLOAD_FOLDER'] = os.getcwd() + "/uploads"
 
+#Recreating the dict of synaptic processes
+def recreate_synapses_processes():
+    print("Recreating the synapses process file")
+    p = app.config['UPLOAD_FOLDER']
+    data = {}
+    json_data = json.dumps(data)
+    with open(p + "/synapses_processes.json", "w") as jf:
+        json.dump(json_data, jf)
+    jf.close()
+    print("Recreation done")
+
+recreate_synapses_processes()
+
 def load_all_sp_nod_objs():
     try:
         fp = os.listdir(app.config['UPLOAD_FOLDER'])
-        files = ["/sps/" + f for f in fpi] #if os.path.isfile(f)]
+        files = ["/sps/" + f for f in fp] #if os.path.isfile(f)]
 
         for f in files:
             with open(fp + f, "r") as jf:
@@ -107,9 +120,10 @@ def get_nodo_mem_adr(synapses_process_id):
         print(f"NOD: the nodo mem adr is: {sp[str(synapses_process_id)]}")
     except Exception as e:
         print(f"No synaptic process found in RAM: {e}")
-        print("Sarching on disk")
+        print("Serching on disk")
         ma = load_especific_nod_sp(synapses_process_id)
-        if ma == 0: print("No memory adr detected for underlying synaptic processes")
+        if ma == 0:
+            print("No memory adr detected for underlying synaptic processes")
 
     return ma
 

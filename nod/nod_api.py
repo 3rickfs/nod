@@ -22,7 +22,7 @@ def recreate_synapses_processes():
     p = app.config['UPLOAD_FOLDER']
     data = {}
     json_data = json.dumps(data)
-    with open(p + "/synapses_processes.json", "w") as jf:
+    with open(p + "/synapses_processes.json", "w+") as jf:
         json.dump(json_data, jf)
     jf.close()
     print("Recreation done")

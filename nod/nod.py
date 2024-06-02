@@ -50,6 +50,12 @@ class nod():
         #self.instrucciones = self.get_format_instr(instrucciones) 
         #self.procesadores = self.get_format_proc(procesadores)
 
+    def reset_input_num_count(self):
+        self.input_num_count = []
+        for l in self.input_num: #for all layers
+            zeros = [0 for i in range(l)]
+            self.input_num_count.append(zeros.copy())
+
     def save_sp_nod_data(self, sps_folder_path, nod_data):
         print("Saving synaptic process nod data")
         try:
@@ -188,6 +194,11 @@ class nod():
                     synapses_process_id = self.synapses_process_id,
                     send_output_2_eps = so2e #TODO: self.so2eps[indx] #False #what happens if this is for the same nod
                 )
+                #RESETING input_num_count
+                l = len(self.input_num_count[indx])
+                zeros = [0 for i in range(l)]
+                self.input_num_count[indx] = zeros
+
                 if lnum > 1 and indx < lnum - 1:
                     lid += 1 #next layer
                     indx = layer_id + lid
@@ -226,6 +237,8 @@ class nod():
 
             self.neuron_outputs = result["o"]
             self.status = "waiting" #for next job
+
+            
             #self.input_num_count[layer_id] = 0
         except Exception as e:
             result = {
@@ -286,10 +299,15 @@ class nod():
         if not 0 in self.input_num_count[indx]:
             #print(f"Ready for running the models with following inpunts: {self.inputs}")
             self.status = "ready" #TODO: integrate nod's status management
-            zeros = [0 for i in range(self.input_num[layer_id])]
+            zeros = [0 for i in range(self.input_num[layer_id-1])]
             self.input_num_count[indx] = zeros
             #Running neurons inmediately after setting inputs
             r = self.run_neuron_ops(indx)
+            #reset values to the counter if last layer was executed
+            #if layer_id == len(self.input_names):
+            #    print("RESETING INPUT NUM COUNT")
+            #    self.reset_input_num_count()
+
         return True
         #else:
         #    print("Inputs rejected")

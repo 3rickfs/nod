@@ -132,7 +132,7 @@ class create_output_msgs(neuron_ops):
             'inputs': kwargs["o"]
         }
         kwargs["output_msg"] = output_msg
-        #print(output_msg)
+        print(f"OUTPUT_MSG!! {output_msg}")
 
         return kwargs
 

@@ -191,7 +191,8 @@ def set_inputs():
                            input_data["input_idx"],
                            input_data["layer_id"]
                           ):
-            result = {"result": "nod inputs transferred"}
+            result = {"result": "nod inputs transferred",
+                      "inputs_r": input_data['inputs']}
             outputs = 123
         else:
             raise Exception("Error reading nod inputs")
@@ -233,11 +234,15 @@ def send_nod_inputs():
         #print(f"nodo input names: {nodo.input_names}")
         nodo.set_synapses_process_id(input_data["synapses_process_id"])
         #nodo.set_nod_destinations(input_data["nodo_mem_adr_dstn"])
+        #reset input number counter
+        #nodo.reset_input_num_count()
+        #set initial inputs
         if nodo.set_inputs(input_data["inputs"],
                            input_data["input_idx"],
                            input_data["layer_id"]
                           ):
-            result = {"result": "nod inputs transferred"}
+            result = {"result": "nod inputs transferred",
+                      "inputs_r": input_data['inputs']}
             outputs = 123
         else:
             raise Exception("Error reading nod inputs")

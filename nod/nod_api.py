@@ -13,8 +13,11 @@ outputs = []
     #app.config['UPLOAD_FOLDER'] = '/home/dev-1/dev/edge-intelligence-simulator/nod/nod/uploads'
 #else:
 #    app.config['UPLOAD_FOLDER'] = '/home/nod/nod/uploads'
-
-app.config['UPLOAD_FOLDER'] = os.getcwd() + "/uploads"
+try:
+    pn = os.environ.get('POD_NAME')
+    app.config['UPLOAD_FOLDER'] = "/nods_data/" + pn + "/uploads"
+except:
+    app.config['UPLOAD_FOLDER'] = os.getcwd() + "/uploads"
 
 #Recreating the dict of synaptic processes
 def recreate_synapses_processes():
@@ -22,6 +25,7 @@ def recreate_synapses_processes():
     p = app.config['UPLOAD_FOLDER']
     data = {}
     json_data = json.dumps(data)
+    print(f"Synapses processes file will be saved in: {p}")
     with open(p + "/synapses_processes.json", "w+") as jf:
         json.dump(json_data, jf)
     jf.close()

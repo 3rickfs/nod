@@ -89,7 +89,7 @@ def delete_sp_nod_obj(nodo, spid):
     with open(p + "/synapses_processes.json", "r") as jf:
         sps = json.load(jf)
     jf.close()
-    del nodo_obj_adr, sps[str(spid)]
+    del sps[str(spid)] #nodo_obj_adr
 
     #Overwriting register
     with open(p + "/synapses_processes.json", "w") as jf:
@@ -119,6 +119,7 @@ def get_nodo_mem_adr(synapses_process_id):
     with open(p + "/synapses_processes.json", "r") as jsonfile:
         sp = json.load(jsonfile)
     jsonfile.close()
+    print(f"spc: {synapses_process_id}")
     try:
         ma = sp[str(synapses_process_id)]
         print(f"NOD: the nodo mem adr is: {sp[str(synapses_process_id)]}")
@@ -272,9 +273,12 @@ def get_sp_nod_info():
 
 @app.route("/remove_sp_nod_info", methods=['POST'])
 def remove_sp_nod_info():
+    print("REMOVING SP INFO")
     input_data = request.get_json()
 
     nodo_mem_adr = get_nodo_mem_adr(input_data["synapses_process_id"])
+    if nodo_mem_adr == 0:
+        raise Exception("Synaptic process id not found")
     nodo = ctypes.cast(int(nodo_mem_adr), ctypes.py_object).value
 
     try:

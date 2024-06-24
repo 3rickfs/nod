@@ -3,7 +3,8 @@ import json
 import ctypes
 
 from flask import Flask, request
-from nod.nod import nod
+#from nod.nod import nod
+import nod
 
 app = Flask(__name__)
 nodo = None

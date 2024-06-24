@@ -238,7 +238,7 @@ class nod():
             self.neuron_outputs = result["o"]
             self.status = "waiting" #for next job
 
-            
+
             #self.input_num_count[layer_id] = 0
         except Exception as e:
             result = {

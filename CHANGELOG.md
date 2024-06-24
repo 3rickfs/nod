@@ -3,6 +3,7 @@
 ## [1.2.1] 2024-05-15
 ### Add
 - Nod able to recover from a hardware reset. The registerd synaptic process can be restored. Until this relese extra files and the ones which came from the begining are going to remain. 
+- Local nod to evaluate the neuron execution ops
 
 ## [1.1.1] 2024-03-20
 ### Add

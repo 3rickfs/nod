@@ -240,7 +240,7 @@ def send_nod_inputs(input_data):
                            input_data["layer_id"]
                           ):
             result = {"result": "nod inputs transferred",
-                      "output": nodo.get_neuron_outputs()
+                      "output": nodo.get_neuron_outputs(),
                       "inputs_r": input_data['inputs']}
             outputs = 123
         else:

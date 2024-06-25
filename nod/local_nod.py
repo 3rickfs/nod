@@ -179,7 +179,7 @@ def save_neurons(nod_data):
         result = {"result": f"error during getting nod params: {e}"}
 
     #print("FINISHHED")
-    return json.dumps(result)
+    return result
 
 def set_inputs(input_data):
     global nodo
@@ -250,7 +250,7 @@ def send_nod_inputs(input_data):
         print(f"Error reading nod inputs: {e}")
         result = {"result": f"error reading nod inputs: {e}"}
 
-    return json.dumps(result)
+    return result
 
 def get_sp_nod_info(input_data):
     #input_data = request.get_json()

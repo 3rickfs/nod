@@ -277,8 +277,9 @@ class nod():
             print(f"input num count: {self.input_num_count[indx]}")
             print(f"input num count len: {len(self.input_num_count[indx])}")
         for j in range(len(inputs)):
-            print(f"idx: {indx}")
-            print(f"j: {j}")
+            if self.verbose:
+                print(f"idx: {indx}")
+                print(f"j: {j}")
                 #inpts[idx] = inputs[j]
             i = input_idx + j - int(self.input_names[indx][0][1:]) + 1
             #print(f"i: {i}")

@@ -172,7 +172,7 @@ def save_neurons(nod_data):
         else:
             raise Exception("Error reading parameters")
         result = {"result": "neurons installed",
-                  "nodo_mem_adr": nodo_mem_adr
+                  "nodo": nodo 
                  }
     except Exception as e:
         print(f"Error during getting nod parameters: {e}")

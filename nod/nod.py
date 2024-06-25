@@ -44,7 +44,7 @@ class nod():
         self.so2eps = []
         self.flid = 0
         self.finns = []
-        self.verbose = True
+        self.verbose = False
         self.spfn = ""
 
         #self.instrucciones = self.get_format_instr(instrucciones) 
